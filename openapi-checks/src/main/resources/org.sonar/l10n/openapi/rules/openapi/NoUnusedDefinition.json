@@ -1,0 +1,16 @@
+{
+  "title": "Do not leave unused definition.",
+  "type": "CODE_SMELL",
+  "status": "ready",
+  "remediation": {
+    "func": "Constant\/Issue",
+    "constantCost": "15mn"
+  },
+  "tags": [
+    "readability",
+    "should"
+  ],
+  "defaultSeverity": "Major",
+  "ruleSpecification": "",
+  "sqKey": "NoUnusedDefinition"
+}

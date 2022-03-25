@@ -1,0 +1,6 @@
+description: token to be passed as a header
+type: array
+items:
+  type: integer
+  format: int64
+collectionFormat: csv

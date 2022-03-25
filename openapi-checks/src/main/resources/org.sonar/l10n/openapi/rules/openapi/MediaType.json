@@ -1,0 +1,17 @@
+{
+  "title": "Media types SHOULD conform to the RFC.",
+  "type": "CODE_SMELL",
+  "status": "ready",
+  "remediation": {
+    "func": "Constant\/Issue",
+    "constantCost": "5mn"
+  },
+  "tags": [
+    "interoperability",
+    "specification",
+    "should"
+  ],
+  "defaultSeverity": "Minor",
+  "ruleSpecification": "https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#media-types",
+  "sqKey": "MediaType"
+}

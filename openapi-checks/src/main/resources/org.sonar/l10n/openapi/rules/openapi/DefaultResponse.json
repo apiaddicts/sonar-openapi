@@ -1,0 +1,16 @@
+{
+  "title": "Each operation SHOULD have a default response.",
+  "type": "CODE_SMELL",
+  "status": "ready",
+  "remediation": {
+    "func": "Constant\/Issue",
+    "constantCost": "30mn"
+  },
+  "tags": [
+    "bad-practice",
+    "should"
+  ],
+  "defaultSeverity": "Minor",
+  "ruleSpecification": "",
+  "sqKey": "DefaultResponse"
+}

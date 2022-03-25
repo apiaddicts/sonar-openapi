@@ -1,0 +1,16 @@
+openapi: "3.0.1"
+info:
+  version: 1.0.0
+  title: Swagger Petstore
+paths:
+  /pets:
+    get:
+      # Noncompliant@+1 {{Define a default response for this operation.}}
+      responses:
+        '200':
+          description: list correctly retrieved
+    post:
+      responses:
+        default:
+          description: pet created
+

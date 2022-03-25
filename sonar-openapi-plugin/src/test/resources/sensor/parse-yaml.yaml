@@ -1,0 +1,51 @@
+openapi: "3.0.0"
+info:
+  title: Test api
+  description: Test api
+  version: v1
+
+tags:
+  - name: Test
+    description: 'Test tag'
+
+paths:
+  /test/one:
+    get:
+      summary: Test one.
+      description: Test one.
+      operationId: testOne
+      tags:
+        - Test
+      responses:
+        '200':
+          $ref: '#/components/responses/okResponse'
+        default:
+          $ref: '#/components/responses/unexpectedErrorResponse'
+
+  # Test comment
+  /test/two:
+    get:
+      summary: Test two.
+      description: |
+       This is a complex
+       multiline description
+
+
+       with blank lines
+       and other things
+      operationId: testTwo
+      tags:
+        - Test
+      responses:
+        '200':
+          $ref: '#/components/responses/okResponse'
+        default:
+          $ref: '#/components/responses/unexpectedErrorResponse'
+
+components:
+
+  responses:
+    okResponse:
+      description: Ok
+    unexpectedErrorResponse:
+      description: Unexpected error

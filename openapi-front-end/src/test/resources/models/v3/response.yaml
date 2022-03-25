@@ -1,0 +1,14 @@
+description: Pet updated.
+headers:
+  X-Rate-Limit-Limit:
+    description: The number of allowed requests in the current period
+    schema:
+      type: integer
+content:
+  'application/json': {}
+  'application/xml': {}
+links:
+  element:
+    operationRef: '#/paths/~1pets~1{id}/get'
+    parameters:
+      id: $request.path.id

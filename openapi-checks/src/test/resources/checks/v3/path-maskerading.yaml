@@ -1,0 +1,10 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Swagger Petstore
+paths:
+  /pets: {}
+  /{animals}/{id}/name: {}
+  # Noncompliant@+1 [[secondary=+1]] {{These paths are masking each other.}}
+  /pets/{id}: {}
+  /pets/1234: {}

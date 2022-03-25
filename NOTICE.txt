@@ -1,0 +1,3 @@
+doSonarAPI: Sonar OpenAPI
+Copyright 2021 Apiaddicts
+mailto:contacta AT apiaddicts DOT org

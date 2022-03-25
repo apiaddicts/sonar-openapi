@@ -1,0 +1,17 @@
+{
+  "title": "Paths SHOULD NOT mask each other or be ambiguous",
+  "type": "BUG",
+  "status": "ready",
+  "remediation": {
+    "func": "Constant\/Issue",
+    "constantCost": "1h"
+  },
+  "tags": [
+    "suspicious",
+    "specification",
+    "should"
+  ],
+  "defaultSeverity": "Major",
+  "ruleSpecification": "https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#path-templating-matching",
+  "sqKey": "PathMaskerading"
+}

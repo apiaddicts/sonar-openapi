@@ -1,0 +1,37 @@
+<p>Do not paraphrase the summary of an operation in its description. It gives the reader a false promise to document the
+operation, while it adds no value. Don't provide a detailed description if the summary is sufficient to understand the
+operation.
+</p>
+
+<h2>Noncompliant Code Example (OpenAPI 2)</h2>
+<pre>
+swagger: "2.0"
+info:
+  version: 1.0.0
+  title: Swagger Petstore
+paths:
+  /pets:
+    get:
+      summary: list all pets
+      # Noncompliant: Description must differ from summary..
+      description: List all pets
+      responses:
+        default:
+          description: the default response
+</pre>
+<h2>Compliant Solution (OpenAPI 2)</h2>
+<pre>
+swagger: "2.0"
+info:
+  version: 1.0.0
+  title: Swagger Petstore
+paths:
+  /pets:
+    get:
+      summary: list all pets
+      description: Get all defined pets. The API can be paginated by the client, but the server is allowed to restrict
+                   the number of returned results further than what the client has requested.
+      responses:
+        default:
+          description: the default response
+</pre>

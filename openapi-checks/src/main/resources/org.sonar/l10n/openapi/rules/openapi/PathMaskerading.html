@@ -1,0 +1,31 @@
+<p>The OpenAPI specification allows for templating of paths. While this is a powerful tool to capture parameters in
+a route's path, it can lead to ambiguous or masking path definitions. For a given path root, pay attention to not
+defined more that one templated segment. Also avoid defining both a templated segment and a non-templated segment
+for the same path root.</p>
+
+<h2>Noncompliant Code Example</h2>
+<p>In this example, the <tt>{transactionId}</tt> segment is always being masked by the non-templated <tt>purge</tt>
+    segment. The first route will never be invoked.</p>
+<pre>
+/v1/transactions/{transactionId}
+/v1/transactions/purge
+</pre>
+
+<p>In this example, both paths are templated, leading to undefined behaviour. Depending on the server's implementation,
+one route may never be called.</p>
+<pre>
+/v1/{server}/destroy
+/v1/{transaction}/destroy
+</pre>
+
+<h2>Compliant Solution</h2>
+
+<p>Define your paths in a non-ambiguous way, so that they don't collide.</p>
+<pre>
+/v1/transactions/{transactionId}
+/v1/transactions/{transactionId}/purge
+
+/v1/servers/{server}/destroy
+/v1/transactions/{transaction}/destroy
+</pre>
+

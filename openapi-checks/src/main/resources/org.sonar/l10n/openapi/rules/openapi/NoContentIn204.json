@@ -1,0 +1,16 @@
+{
+  "title": "204 responses MUST NOT return content.",
+  "type": "BUG",
+  "status": "ready",
+  "remediation": {
+    "func": "Constant\/Issue",
+    "constantCost": "15min"
+  },
+  "tags": [
+    "interoperability",
+    "must"
+  ],
+  "defaultSeverity": "Major",
+  "ruleSpecification": "https://tools.ietf.org/html/rfc7231#section-6.3.5",
+  "sqKey": "NoContentIn204"
+}

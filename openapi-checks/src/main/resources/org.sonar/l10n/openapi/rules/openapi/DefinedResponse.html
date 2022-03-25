@@ -1,0 +1,90 @@
+<p>Defining the different responses that an operation returns conveys important information to the
+users of your API. It enables code-generating tools to create complete implementations of your specification,
+and documents your models to the developers.
+</p>
+<p>When you define a response, don't document just the status code. Also document the schema that goes
+with it, so that users of the API don't make guesses or bind their implementation to non-contractual fields.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+openapi: "3.0.1"
+info:
+  version: 1.0.0
+  title: Swagger Petstore
+paths:
+  /pets:
+    get:
+      responses:
+        # No declared schema for the response
+        '200':
+          description: list correctly retrievded
+    post:
+      # No response defined
+      responses: {}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+openapi: "3.0.1"
+info:
+  version: 1.0.0
+  title: Swagger Petstore
+paths:
+  /pets:
+    get:
+      responses:
+        '200':
+          description: list correctly retrieved
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PetSchema'
+              example:
+                [
+                  {
+                     "name": "Fido",
+                     "kind": "Dog"
+                  },
+                  {
+                     "name": "Kitty",
+                     "kind": "Cat"
+                  }
+                ]
+    post:
+      responses:
+        '201':
+          description: pet created
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/PetSchema'
+components:
+  schemas:
+    PetSchema:
+      type: object
+      properties:
+        name:
+          type: string
+        kind:
+          type: string
+          enum: [ Dog, Cat ]
+      example:
+        name: Fido
+        kind: Dog
+  responses:
+    ErrorResponse:
+      description: Default error response of the API
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+          example:
+            {
+              "message": "An error occured"
+            }
+</pre>

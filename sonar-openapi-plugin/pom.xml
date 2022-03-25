@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.apiaddicts.apitools.dosonarapi</groupId>
+    <artifactId>dosonarapi</artifactId>
+    <version>1.0.0</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
+  <artifactId>sonar-openapi-plugin</artifactId>
+  <packaging>sonar-plugin</packaging>
+
+  <name>OpenAPI :: Sonar Plugin</name>
+  <!-- Be careful when altering <description> as its value shows up in the SonarQube GUI -->
+  <description>Code Analyzer for OpenAPI</description>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.sonarsource.sonarqube</groupId>
+      <artifactId>sonar-plugin-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>openapi-front-end</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>openapi-checks</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.sonarsource.analyzer-commons</groupId>
+      <artifactId>sonar-analyzer-commons</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.sonarsource.sonar-packaging-maven-plugin</groupId>
+        <artifactId>sonar-packaging-maven-plugin</artifactId>
+        <configuration>
+          <pluginName>SonarOpenApi</pluginName>
+          <pluginClass>${sonar.pluginClass}</pluginClass>
+          <skipDependenciesPackaging>true</skipDependenciesPackaging>
+          <sonarLintSupported>true</sonarLintSupported>
+          <sonarQubeMinVersion>${sonarQubeMinVersion}</sonarQubeMinVersion>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-shade-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <shadedArtifactAttached>false</shadedArtifactAttached>
+              <createDependencyReducedPom>false</createDependencyReducedPom>
+              <minimizeJar>true</minimizeJar>
+              <filters>
+                <filter>
+                  <artifact>jaxen:jaxen</artifact>
+                  <includes>
+                    <include>**</include>
+                  </includes>
+                </filter>
+                <filter>
+                  <artifact>*:*</artifact>
+                  <excludes>
+                    <exclude>META-INF/LICENSE*</exclude>
+                    <exclude>META-INF/NOTICE*</exclude>
+                    <exclude>META-INF/*.RSA</exclude>
+                    <exclude>META-INF/*.SF</exclude>
+                    <exclude>LICENSE*</exclude>
+                    <exclude>NOTICE*</exclude>
+                  </excludes>
+                </filter>
+              </filters>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>

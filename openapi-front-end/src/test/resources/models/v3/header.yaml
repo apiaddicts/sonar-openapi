@@ -1,0 +1,13 @@
+description: The number of allowed requests in the current period
+schema:
+  type: integer
+required: false
+deprecated: false
+allowEmptyValue: true
+allowReserved: false
+explode: false
+style: simple
+content:
+  application/json:
+    schema:
+      type: object

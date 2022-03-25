@@ -1,0 +1,14 @@
+{
+  "title": "Provide a summary for each operation.",
+  "type": "CODE_SMELL",
+  "status": "ready",
+  "remediation": {
+    "func": "Constant\/Issue",
+    "constantCost": "2mn"
+  },
+  "tags": [
+    "must"
+  ],
+  "defaultSeverity": "Blocker",
+  "sqKey": "ProvideOpSummary"
+}

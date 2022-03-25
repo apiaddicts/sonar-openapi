@@ -1,0 +1,14 @@
+{
+  "title": "Operation description must differ from its summary.",
+  "type": "CODE_SMELL",
+  "status": "ready",
+  "remediation": {
+    "func": "Constant\/Issue",
+    "constantCost": "10mn"
+  },
+  "tags": [
+    "must"
+  ],
+  "defaultSeverity": "Blocker",
+  "sqKey": "DescriptionDiffersSummary"
+}

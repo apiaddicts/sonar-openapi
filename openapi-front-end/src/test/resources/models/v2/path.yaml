@@ -1,0 +1,27 @@
+get:
+  description: Returns pets based on ID
+  summary: Find pets by ID
+  operationId: getPetsById
+  produces:
+  - application/json
+  - text/html
+  responses:
+    '200':
+      description: pet response
+      schema:
+        type: array
+        items:
+          $ref: '#/definitions/Pet'
+    default:
+      description: error payload
+      schema:
+        $ref: '#/definitions/ErrorModel'
+parameters:
+- name: id
+  in: path
+  description: ID of pet to use
+  required: true
+  type: array
+  items:
+    type: string
+  collectionFormat: csv

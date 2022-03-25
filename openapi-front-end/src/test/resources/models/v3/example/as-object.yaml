@@ -1,0 +1,10 @@
+summary: A foo example
+description: |
+  A multiline
+  description
+value: {
+  "foo": "bar",
+  "nested": {
+      "other": "property"
+  }
+}

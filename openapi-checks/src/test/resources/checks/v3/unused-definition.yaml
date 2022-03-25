@@ -1,0 +1,72 @@
+openapi: "3.0.1"
+info:
+  version: 1.0.0
+  title: Swagger Petstore
+tags:
+- name: unused-tag      # Noncompliant {{Unused tag.}}
+  description: a tag not referenced in the operations
+paths:
+  /pets:
+    post:
+      parameters:
+      - $ref: "#/components/parameters/Used"
+      responses:
+        default:
+          description: the default response
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/Used"
+        '201':
+          $ref: "#/components/responses/Used"
+components:
+  schemas:
+    Unused:                 # Noncompliant {{Unused schema}}
+      type: object
+    Used:
+      type: object
+    Pet:
+      type: object
+      discriminator:
+        propertyName: petType
+        mapping:
+          Cat: "#/components/schemas/Cat"
+          Dog: "#/components/schemas/Dog"
+      properties:
+        name:
+          type: string
+        petType:
+          type: string
+      required: [name, petType]
+    Cat:
+      type: object
+      allOf:
+      - $ref: "#/components/schemas/Pet"
+      - type: object
+        properties:
+          huntingSkills:
+            type: string
+        required:
+        - huntingSkills
+    Dog:
+      type: object
+      allOf:
+      - $ref: "#/components/schemas/Pet"
+      - type: object
+        properties:
+          master:
+            type: string
+        required:
+        - master
+  parameters:
+    Unused:                 # Noncompliant {{Unused parameter}}
+      in: query
+      name: toto
+    Used:
+      in: query
+      name: toto
+  responses:
+    Unused:                 # Noncompliant {{Unused response}}
+      description: some unused response
+    Used:
+      description: some referenced response

@@ -1,0 +1,49 @@
+openapi: "3.0.1"
+info:
+  version: 1.0.0
+  title: Swagger Petstore
+paths:
+  /pets:
+    get:
+      responses:
+        '200': # Noncompliant {{Define the model of your response.}}
+          description: some response
+        '201':
+          description: some response
+          content:
+            # Noncompliant@+1 {{Define the model of your response.}}
+            'application/json': {}
+            'application/text':
+              schema:
+                type: string
+        '202':
+          description: some operation
+          content:
+            'application/json':
+              schema:
+                type: string
+        '500': # Noncompliant {{Define the model of your response.}}
+          $ref: '#/components/responses/MyErroneousResponse'
+    post:
+      # Noncompliant@+1 {{Define the responses of your operations.}}
+      responses: {}
+    put:
+      responses:
+        default:
+          description: default response
+          content:
+            'application/json':
+              schema:
+                type: object
+        '200':  # No error since a default schema is supplied
+          description: success response
+components:
+  responses:
+    MyErroneousResponse:
+      description: an example response missing a model
+    MyOtherResponse:
+      description: some response
+      content:
+        'application/json':
+          schema:
+            type: object

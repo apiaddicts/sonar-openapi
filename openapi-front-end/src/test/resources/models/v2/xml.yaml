@@ -1,0 +1,4 @@
+namespace: http://swagger.io/schema/sample
+prefix: sample
+attribute: true
+x-extension: Some value

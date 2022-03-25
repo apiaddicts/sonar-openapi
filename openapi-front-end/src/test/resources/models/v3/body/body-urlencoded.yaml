@@ -1,0 +1,12 @@
+content:
+  application/x-www-form-urlencoded:
+    schema:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        address:
+          # complex types are stringified to support RFC 1866
+          type: object
+          properties: {}

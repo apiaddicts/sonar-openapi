@@ -1,0 +1,42 @@
+{
+  "ClientCredentials": {
+    "required": ["scope"],
+    "properties": {
+      "response_type": {
+        "type": "string",
+        "description": "The requested response type"
+      },
+      "scope": {
+        "type": "string",
+        "description": "The required scope for the token, if any"
+      }
+    },
+    "type": "object"
+  },
+  "Token": {
+    "required": [
+      "access_token",
+      "expires_in",
+      "token_type"
+    ],
+    "properties": {
+      "access_token": {
+        "type": "string",
+        "description": "The Authorization Token"
+      },
+      "token_type": {
+        "type": "string",
+        "description": "The type of the Authorization Token"
+      },
+      "expires_in": {
+        "type": "string",
+        "description": "The time after which the token will expire"
+      },
+      "scope": {
+        "type": "string",
+        "description": "The required scope for the token, if any"
+      }
+    },
+    "type": "object"
+  }
+}

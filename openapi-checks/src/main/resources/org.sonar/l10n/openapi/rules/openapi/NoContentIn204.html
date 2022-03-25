@@ -1,0 +1,21 @@
+<p>As defined <a href="https://tools.ietf.org/html/rfc7231#section-6.3.5">by the IANA</a>, the 204 status code means no content needs to be sent by the server.</p>
+
+<h2>Noncompliant Code Example (OpenAPI v2)</h2>
+<pre>
+/pets/{petId}:
+  delete:
+    responses:
+      '204':       # Noncompliant: 204 No Content MUST NOT return anything.
+        description: delete pet
+        schema:
+          type: object
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+/pets/{petId}:
+  delete:
+    responses:
+      '204':
+        description: delete pet
+</pre>
+

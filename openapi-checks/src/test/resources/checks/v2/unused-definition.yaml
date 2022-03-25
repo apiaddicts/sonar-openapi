@@ -1,0 +1,68 @@
+swagger: "2.0"
+info:
+  version: 1.0.0
+  title: Swagger Petstore
+tags:
+- name: unused-tag      # Noncompliant {{Unused tag.}}
+  description: a tag not referenced in the operations
+paths:
+  /pets:
+    post:
+      parameters:
+      - $ref: "#/parameters/Used"
+      responses:
+        default:
+          description: the default response
+          schema:
+            $ref: "#/definitions/Used"
+        '201':
+          $ref: "#/responses/Used"
+definitions:
+  Unused:                 # Noncompliant {{Unused schema}}
+    type: object
+  Used:
+    type: object
+  Pet:
+    type: object
+    discriminator: petType
+    properties:
+      name:
+        type: string
+      petType:
+        type: string
+        enum: [Cat, Dog]
+    required: [name, petType]
+  Cat:
+    type: object
+    allOf:
+    - $ref: "#/definitions/Pet"
+    - type: object
+      properties:
+        huntingSkills:
+          type: string
+      required:
+      - huntingSkills
+  Dog:
+    type: object
+    allOf:
+    - $ref: "#/definitions/Pet"
+    - type: object
+      properties:
+        master:
+          type: string
+      required:
+      - master
+parameters:
+  Unused:                 # Noncompliant {{Unused parameter}}
+    type: string
+    in: query
+    name: toto
+  Used:
+    type: string
+    in: query
+    name: toto
+responses:
+  Unused:                 # Noncompliant {{Unused response}}
+    description: some unused response
+  Used:
+    description: some referenced response

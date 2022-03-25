@@ -1,0 +1,5 @@
+name: avatar
+in: formData
+description: The avatar of the user
+required: true
+type: file

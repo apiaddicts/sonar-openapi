@@ -1,0 +1,7 @@
+in: query
+name: freeForm
+schema:
+  type: object
+  additionalProperties:
+    type: integer
+style: form

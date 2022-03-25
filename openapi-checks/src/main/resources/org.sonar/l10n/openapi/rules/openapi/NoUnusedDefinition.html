@@ -1,0 +1,117 @@
+<p>Leaving unused definitions in your model is harmful in several ways:</p>
+
+<ul>
+  <li>it clutters your Swagger file and makes it less readable for humans;</li>
+  <li>it lets code generators create useless classes that spread into your users code;</li>
+  <li>it must be maintained over time and adds useless complexity to your code;</li>
+</ul>
+
+<p>Make sure your clean up your contract definition to remove any unsused reference.<br/>
+Note: in the special case of OpenAPI 2 discriminators (see https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#fixed-fields-13),
+this rule assumes that the discriminator uses the enum model in the base object, where the values of the enum are the names
+of the derived models, as in the following example:
+</p>
+
+<pre>
+definitions:
+  Pet:
+    type: object
+    discriminator: petType
+    properties:
+      name:
+        type: string
+      petType:
+        type: string
+        enum: [Cat, Dog]
+    required: [name, petType]
+  Cat:
+    type: object
+    allOf:
+    - $ref: "#/definitions/Pet"
+    - type: object
+      properties:
+        huntingSkills:
+          type: string
+      required:
+      - huntingSkills
+  Dog:
+    type: object
+    allOf:
+    - $ref: "#/definitions/Pet"
+    - type: object
+      properties:
+        master:
+          type: string
+      required:
+      - master
+</pre>
+
+
+<h2>Noncompliant Code Example (OpenAPI 2)</h2>
+<pre>
+swagger: "2.0"
+info:
+  version: 1.0.0
+  title: Swagger Petstore
+paths:
+  /pets:
+    post:
+      parameters:
+      - $ref: "#/parameters/Used"
+      responses:
+        default:
+          description: the default response
+          schema:
+            $ref: "#/definitions/Used"
+        '201':
+          $ref: "#/responses/Used"
+definitions:
+  Unused:                 # Noncompliant {{Unused schema}}
+    type: object
+  Used:
+    type: object
+parameters:
+  Unused:                 # Noncompliant {{Unused parameter}}
+    type: string
+    in: query
+    name: toto
+  Used:
+    type: string
+    in: query
+    name: toto
+responses:
+  Unused:                 # Noncompliant {{Unused response}}
+    description: some unused response
+  Used:
+    description: some referenced response
+</pre>
+<h2>Compliant Solution (OpenAPI 2)</h2>
+<pre>
+swagger: "2.0"
+info:
+  version: 1.0.0
+  title: Swagger Petstore
+paths:
+  /pets:
+    post:
+      parameters:
+      - $ref: "#/parameters/Used"
+      responses:
+        default:
+          description: the default response
+          schema:
+            $ref: "#/definitions/Used"
+        '201':
+          $ref: "#/responses/Used"
+definitions:
+  Used:
+    type: object
+parameters:
+  Used:
+    type: string
+    in: query
+    name: toto
+responses:
+  Used:
+    description: some referenced response
+</pre>

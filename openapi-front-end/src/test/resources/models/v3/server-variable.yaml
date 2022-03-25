@@ -1,0 +1,6 @@
+enum:
+  - VALUE1
+  - VALUE2
+  - VALUE3
+default: some default value
+description: some text helping to understand the variable

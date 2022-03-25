@@ -1,0 +1,6 @@
+"200":
+  description: Pet updated.
+"405":
+  description: Invalid input
+"401":
+  $ref: "#/responses/AuthError"

@@ -1,0 +1,44 @@
+<p>You should also define a default response schema for your operations as a catch-all for undeclared specific
+return codes. This will help your users know what to do with unspecified HTTP return codes.</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+openapi: "3.0.1"
+info:
+  version: 1.0.0
+  title: Swagger Petstore
+paths:
+  /pets:
+    get:
+      # No default response defined
+      responses:
+        '200':
+          description: list correctly retrieved
+          content: {
+            # content definition skipped
+          }
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+openapi: "3.0.1"
+info:
+  version: 1.0.0
+  title: Swagger Petstore
+paths:
+  /pets:
+    get:
+      responses:
+        default:
+          $ref: '#/responses/ErrorResponse'
+        '200':
+          description: list correctly retrieved
+          content: {
+            # content definition skipped
+          }
+responses:
+  ErrorResponse:
+    description: Default error response of the API
+    content: {
+      # content definition skipped
+    }
+</pre>

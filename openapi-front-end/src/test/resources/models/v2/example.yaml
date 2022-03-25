@@ -1,0 +1,6 @@
+application/json:
+  name: Puma
+  type: Dog
+  color: Black
+  gender: Female
+  breed: Mixed

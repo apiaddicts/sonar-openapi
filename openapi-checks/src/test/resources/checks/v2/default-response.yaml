@@ -1,0 +1,15 @@
+swagger: "2.0"
+info:
+  version: 1.0.0
+  title: Swagger Petstore
+paths:
+  /pets:
+    get:
+      # Noncompliant@+1 {{Define a default response for this operation.}}
+      responses:
+        '200':
+          description: some operation
+    post:
+      responses:
+        default:
+          description: the default response

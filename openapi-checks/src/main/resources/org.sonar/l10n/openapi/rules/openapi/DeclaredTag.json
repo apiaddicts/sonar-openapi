@@ -1,0 +1,17 @@
+{
+  "title": "Each operation SHOULD have a tag.",
+  "type": "CODE_SMELL",
+  "status": "ready",
+  "remediation": {
+    "func": "Constant\/Issue",
+    "constantCost": "5mn"
+  },
+  "tags": [
+    "bad-practice",
+    "readability",
+    "should"
+  ],
+  "defaultSeverity": "Minor",
+  "ruleSpecification": "",
+  "sqKey": "DeclaredTag"
+}

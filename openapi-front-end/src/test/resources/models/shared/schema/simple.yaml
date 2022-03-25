@@ -1,0 +1,14 @@
+type: object
+description: A simple model definition
+required:
+  - name
+  - address
+properties:
+  name:
+    type: string
+  address:
+    $ref: '#/components/schemas/Address'
+  age:
+    type: integer
+    format: int32
+    minimum: 0

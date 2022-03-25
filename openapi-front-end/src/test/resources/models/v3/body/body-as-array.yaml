@@ -1,0 +1,8 @@
+description: user to add to the system
+required: true
+content:
+  text/plain:
+    schema:
+      type: array
+      items:
+        type: string

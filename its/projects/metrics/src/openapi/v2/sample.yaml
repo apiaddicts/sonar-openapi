@@ -1,0 +1,21 @@
+#
+# Some header
+#
+swagger: "2.0"
+info:
+  version: 1.0.0
+  title: Swagger Petstore
+tags:
+- name: used-tag
+  description: a tag referenced in the operations
+paths:
+  /pets:
+    get:
+      tags:
+      - undocumented-tag
+      description: Get all pets
+      responses:
+        '200':
+          description: success response
+          schema:
+            type: object

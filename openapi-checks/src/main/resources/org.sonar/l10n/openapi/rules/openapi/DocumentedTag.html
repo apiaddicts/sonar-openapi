@@ -1,0 +1,40 @@
+<p>
+Each tag should be documented with a short statement explaining its intent.
+</p>
+
+<h2>Noncompliant Code Example (OpenAPI 3)</h2>
+<pre>
+openapi: "3.0.1"
+info:
+  version: 1.0.0
+  title: Swagger Petstore
+tags:
+- name: unused-tag      # There should be no unreferenced tag
+- name: some-tag        # Tags should have a description
+paths:
+  /pets:
+    get:
+      tags:
+      - some-tag
+      - other-tag       # All tags should be documented
+      responses: {}
+</pre>
+<h2>Compliant Solution (OpenAPI 3)</h2>
+<pre>
+openapi: "3.0.1"
+info:
+  version: 1.0.0
+  title: Swagger Petstore
+tags:
+- name: some-tag
+  description: a tag referenced in the operations
+- name: other-tag
+  description: another tag referenced in the operations
+paths:
+  /pets:
+    get:
+      tags:
+      - some-tag
+      - other-tag
+      responses: {}
+</pre>

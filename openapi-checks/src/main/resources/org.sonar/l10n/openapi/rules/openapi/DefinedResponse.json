@@ -1,0 +1,17 @@
+{
+  "title": "Each operation MUST have at least one defined response with a defined model.",
+  "type": "CODE_SMELL",
+  "status": "ready",
+  "remediation": {
+    "func": "Constant\/Issue",
+    "constantCost": "2h"
+  },
+  "tags": [
+    "interoperability",
+    "readability",
+    "must"
+  ],
+  "defaultSeverity": "Blocker",
+  "ruleSpecification": "",
+  "sqKey": "DefinedResponse"
+}
