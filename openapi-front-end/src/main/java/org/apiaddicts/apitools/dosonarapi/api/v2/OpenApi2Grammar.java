@@ -264,7 +264,7 @@ public enum OpenApi2Grammar implements GrammarRuleKey {
       b.property("allOf", b.array(SCHEMA)),
       b.property("properties", b.object(
         b.patternProperty(".*", SCHEMA))),
-      b.property("additionalProperties", b.firstOf(b.bool(false), SCHEMA)),
+      b.property("additionalProperties", b.firstOf(b.bool(), SCHEMA)),
       b.property("discriminator", b.string()),
       b.property("readOnly", b.bool()),
       b.property("xml", XML),

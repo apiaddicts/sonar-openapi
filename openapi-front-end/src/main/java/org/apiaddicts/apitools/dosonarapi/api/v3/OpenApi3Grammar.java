@@ -329,7 +329,7 @@ public enum OpenApi3Grammar implements GrammarRuleKey {
       b.property("not", b.firstOf(REF, SCHEMA)),
       b.property("items", b.firstOf(REF, SCHEMA)),
       b.property("properties", SCHEMA_PROPERTIES),
-      b.property("additionalProperties", b.firstOf(b.bool(false), REF, SCHEMA)),
+      b.property("additionalProperties", b.firstOf(b.bool(), REF, SCHEMA)),
       b.property("description", DESCRIPTION),
       b.property("format", b.string()),
       b.property("default", b.anything()),
