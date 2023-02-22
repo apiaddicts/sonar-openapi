@@ -149,13 +149,16 @@ public class OpenApiAnalyzer {
 
   /**
    * This method is required to avoid a parsing issue with yaml,
-   * sometimes, when an empty line is followed by a comment, it breaks the parser
+   * sometimes, when an empty line is followed by a comment, it breaks the parser,
+   * it also replaces tabs by spaces to avoid another parsin error
    *
    * FIXME: Try to solve in the yaml parser lib
    */
   private String getContent(InputFile inputFile) throws IOException {
     String [] lines = inputFile.contents().split("\n");
     for (int i = 1; i < lines.length; i++) {
+      lines[i] = lines[i].replace("\t", "    ");
+      lines[i] = lines[i].replace("\\/", "/");
       if (!lines[i].trim().isEmpty()) continue;
       int n = lines[i-1].indexOf(lines[i-1].trim());
       if (n < 0) n = 0;

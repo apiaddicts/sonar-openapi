@@ -206,9 +206,9 @@ If you are running behind an enterprise proxy, specify the java proxy options on
 
 Validate that all is correct:
 
-`mvn package -Prelease`
+`mvn clean package -Prelease`
 
 Deploy:
 
-`mvn deploy -Prelease`
+`mvn clean deploy -Prelease`
 
