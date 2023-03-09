@@ -200,7 +200,7 @@ public enum OpenApi3Grammar implements GrammarRuleKey {
     b.rule(RESPONSE).is(b.object(
       b.mandatoryProperty("description", DESCRIPTION),
       b.property("headers", b.object(
-        b.patternProperty(".*", HEADER))),
+        b.patternProperty(".*", b.firstOf(REF, HEADER)))),
       b.property("content", b.object(
         b.patternProperty(".*", MEDIA_TYPE))),
       b.property("links", b.object(

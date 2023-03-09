@@ -113,7 +113,7 @@ public class OpenApiAnalyzer {
     OpenApiVisitorContext visitorContext;
     try {
       String content = getContent(inputFile);
-
+      if (!content.contains("swagger") && !content.contains("openapi")) return;
       JsonNode rootNode = genericParser.parse(content);
       boolean isV2 = !rootNode.at("/swagger").isMissing();
       boolean isV3 = !rootNode.at("/openapi").isMissing();
@@ -156,13 +156,16 @@ public class OpenApiAnalyzer {
    */
   private String getContent(InputFile inputFile) throws IOException {
     String [] lines = inputFile.contents().split("\n");
-    for (int i = 1; i < lines.length; i++) {
-      lines[i] = lines[i].replace("\t", "    ");
-      lines[i] = lines[i].replace("\\/", "/");
+    for (int i = 0; i < lines.length; i++) {
+      lines[i] = lines[i].replace("\t", " ");
+      lines[i] = lines[i].replace("\\/", "//");
+      lines[i] = lines[i].replace("!!", "  ");
       if (!lines[i].trim().isEmpty()) continue;
-      int n = lines[i-1].indexOf(lines[i-1].trim());
-      if (n < 0) n = 0;
-      lines[i] = String.join("", Collections.nCopies(n, " ")) + "#";
+      if (i > 0) {
+        int n = lines[i - 1].indexOf(lines[i - 1].trim());
+        if (n < 0) n = 0;
+        lines[i] = String.join("", Collections.nCopies(n, " ")) + "#";
+      }
     }
     return String.join("\n", lines);
   }

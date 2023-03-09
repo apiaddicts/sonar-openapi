@@ -24,6 +24,9 @@ import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -130,6 +133,16 @@ public class OpenApiScannerSensorTest {
   }
 
   @Test
+  public void parse_openapi3_headers_ref() {
+    inputFile("headers_ref.yaml");
+    activeRules = (new ActiveRulesBuilder())
+            .create(RuleKey.of(CheckList.REPOSITORY_KEY, ParsingErrorCheck.CHECK_KEY))
+            .activate()
+            .build();
+    sensor().execute(context);
+  }
+
+  @Test
   public void parse_yaml_break_comment_ok() {
     inputFile("parse-yaml.yaml");
     activeRules = (new ActiveRulesBuilder())
@@ -165,6 +178,21 @@ public class OpenApiScannerSensorTest {
     assertThat(context.allAnalysisErrors()).hasSize(0);
   }
 
+  //@Test
+  public void test_folder() {
+    List<String> files = listFiles("files");
+    List<String> errorFiles = new LinkedList<>();
+    for (String file: files) {
+      context = SensorContextTester.create(baseDir);
+      inputFile(file);
+      activeRules = (new ActiveRulesBuilder()).create(RuleKey.of(CheckList.REPOSITORY_KEY, ParsingErrorCheck.CHECK_KEY))
+              .activate().build();
+      sensor().execute(context);
+      if (!context.allIssues().isEmpty() || !context.allAnalysisErrors().isEmpty()) errorFiles.add(file);
+    }
+    System.out.println(errorFiles);
+  }
+
   @Test
   public void cancelled_analysis() {
     InputFile inputFile = inputFile("file1.yaml");
@@ -192,5 +220,23 @@ public class OpenApiScannerSensorTest {
       .build();
     context.fileSystem().add(inputFile);
     return inputFile;
+  }
+
+  private List<String> listFiles(String folderName) {
+    File folder = baseDir.resolve(folderName).toAbsolutePath().toFile();
+    return listFilesInFolder(folder, baseDir.toFile());
+  }
+  private static List<String> listFilesInFolder(File folder, File baseFolder) {
+    File[] files = folder.listFiles();
+    List<String> allPaths = new ArrayList<>();
+    for (File file : files) {
+      if (file.isFile()) {
+        String relativePath = baseFolder.toURI().relativize(file.toURI()).getPath();
+        allPaths.add(relativePath);
+      } else if (file.isDirectory()) {
+        allPaths.addAll(listFilesInFolder(file, baseFolder));
+      }
+    }
+    return allPaths;
   }
 }
