@@ -60,11 +60,9 @@ public class OpenApiAnalyzer {
   private final SensorContext context;
   private final List<InputFile> inputFiles;
   private final OpenApiChecks checks;
-  private final YamlParser v2parser;
-  private final YamlParser v3parser;
-  private final YamlParser genericParser;
   private final NoSonarFilter noSonarFilter;
   private final OpenApiCpdAnalyzer cpdAnalyzer;
+  private final OpenApiConfiguration configuration;
   private FileLinesContextFactory fileLinesContextFactory;
 
   public OpenApiAnalyzer(SensorContext context, OpenApiChecks checks, FileLinesContextFactory fileLinesContextFactory, NoSonarFilter noSonarFilter, List<InputFile> inputFiles/*, boolean isv2*/) {
@@ -74,10 +72,7 @@ public class OpenApiAnalyzer {
     this.noSonarFilter = noSonarFilter;
     this.cpdAnalyzer = new OpenApiCpdAnalyzer(context);
     this.inputFiles = inputFiles;
-    OpenApiConfiguration configuration = new OpenApiConfiguration(context.fileSystem().encoding(), true);
-    this.v2parser = OpenApiParser.createV2(configuration);
-    this.v3parser = OpenApiParser.createV3(configuration);
-    this.genericParser = OpenApiParser.createGeneric(configuration);
+    this.configuration = new OpenApiConfiguration(context.fileSystem().encoding(), true);
   }
 
   private static NewIssueLocation newLocation(InputFile inputFile, NewIssue issue, IssueLocation location) {
@@ -122,12 +117,12 @@ public class OpenApiAnalyzer {
     try {
       String content = getContent(inputFile);
       if (!content.contains("swagger") && !content.contains("openapi")) return;
-      JsonNode rootNode = genericParser.parse(content);
+      JsonNode rootNode = OpenApiParser.createGeneric(configuration).parse(content);
       boolean isV2 = !rootNode.at("/swagger").isMissing();
       boolean isV3 = !rootNode.at("/openapi").isMissing();
       YamlParser targetParser = null;
-      if (isV2) targetParser = v2parser;
-      if (isV3) targetParser = v3parser;
+      if (isV2) targetParser = OpenApiParser.createV2(configuration);
+      if (isV3) targetParser = OpenApiParser.createV3(configuration);
       if (targetParser == null) return;
 
       visitorContext = new OpenApiVisitorContext(targetParser.parse(content), targetParser.getIssues(), openApiFile);
@@ -138,12 +133,10 @@ public class OpenApiAnalyzer {
       for (ValidationException cause : e.getCauses()) {
         dumpException(cause, inputFile);
       }
-
     } catch (RecognitionException e) {
       visitorContext = new OpenApiVisitorContext(openApiFile, e);
       LOG.error("Unable to parse file in recognition: " + inputFile.filename() + "\"\n" + e.getMessage());
       dumpException(e, inputFile);
-
     } catch (IOException ex) {
       RecognitionException re = new RecognitionException(0, ex.getMessage());
       visitorContext = new OpenApiVisitorContext(openApiFile, re);
