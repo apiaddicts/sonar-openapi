@@ -87,7 +87,15 @@ public class OpenApiAnalyzer {
       if (location.startLineOffset() == IssueLocation.UNDEFINED_OFFSET) {
         range = inputFile.selectLine(location.startLine());
       } else {
-        range = inputFile.newRange(location.startLine(), location.startLineOffset(), location.endLine(), location.endLineOffset());
+        try {
+          range = inputFile.newRange(location.startLine(), location.startLineOffset(), location.endLine(), location.endLineOffset());
+        } catch (IllegalArgumentException e) {
+          try {
+            range = inputFile.selectLine(location.startLine());
+          } catch (IllegalArgumentException e2) {
+            range = inputFile.selectLine(1);
+          }
+        }
       }
       newLocation.at(range);
     }
@@ -133,13 +141,14 @@ public class OpenApiAnalyzer {
 
     } catch (RecognitionException e) {
       visitorContext = new OpenApiVisitorContext(openApiFile, e);
-      LOG.error("Unable to parse file: " + inputFile.filename() + "\"\n" + e.getMessage());
+      LOG.error("Unable to parse file in recognition: " + inputFile.filename() + "\"\n" + e.getMessage());
       dumpException(e, inputFile);
 
     } catch (IOException ex) {
       RecognitionException re = new RecognitionException(0, ex.getMessage());
       visitorContext = new OpenApiVisitorContext(openApiFile, re);
-      LOG.error("Unable to parse file: " + inputFile.filename() + "\"\n" + ex.getMessage());
+      LOG.error("Unable to parse file in i/o: " + inputFile.filename() + "\"\n" + ex.getMessage());
+      dumpException(re, inputFile);
     }
 
     for (OpenApiCheck check : checks.all()) {
@@ -172,11 +181,11 @@ public class OpenApiAnalyzer {
 
   private void dumpException(RecognitionException e, InputFile inputFile) {
     int line = e.getLine();
-    if (line == 0) {
+    if (line == 0 || line > inputFile.lines()) {
       line = 1;
     }
     int column = 0;
-    if (e instanceof ValidationException) {
+    if (line != 1 && (e instanceof ValidationException)) {
       column = ((ValidationException) e).getNode().getToken().getColumn();
       for (ValidationException cause : ((ValidationException) e).getCauses()) {
         dumpException(cause, inputFile);
