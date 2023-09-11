@@ -1,23 +1,44 @@
-# doSonarAPI
 
-doSonarAPI is a code analyzer for OpenAPI specifications. 
+# 🛠️ doSonarAPI ![Release](https://img.shields.io/badge/release-1.0.5-purple) ![Swagger](https://img.shields.io/badge/-openapi-%23Clojure?style=flat&logo=swagger&logoColor=white) ![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=flat&logo=openjdk&logoColor=white)  [![License: LGPL v3](https://img.shields.io/badge/license-LGPL_v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0) 
 
-doSonarAPI is the spiritual successor of [SonarOpenApi](https://github.com/societe-generale/sonar-openapi), carrying on from the point where it left off with support of Apiaddicts community.
+doSonarAPI is a code analyzer for OpenAPI specifications,  is the spiritual successor of [SonarOpenApi](https://github.com/societe-generale/sonar-openapi), carrying on from the point where it left off with support of Apiaddicts community.
 
-## Features
+💡 If you have an idea for a rule but you are not sure that everyone needs it you can implement a [custom rule](CustomRules.md)
+available only for you.
+
+### This repository is intended for :octocat: **community** use, it can be modified and adapted without commercial use. If you need a version, support or help for your **enterprise** or project, please contact us 📧 devrel@apiaddicts.org
+
+[![Twitter](https://img.shields.io/badge/Twitter-%23000000.svg?style=for-the-badge&logo=x&logoColor=white)](https://twitter.com/APIAddicts) 
+[![Discord](https://img.shields.io/badge/Discord-%235865F2.svg?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/ZdbGqMBYy8)
+[![LinkedIn](https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/company/apiaddicts/)
+[![Facebook](https://img.shields.io/badge/Facebook-%231877F2.svg?style=for-the-badge&logo=Facebook&logoColor=white)](https://www.facebook.com/apiaddicts)
+[![YouTube](https://img.shields.io/badge/YouTube-%23FF0000.svg?style=for-the-badge&logo=YouTube&logoColor=white)](https://www.youtube.com/@APIAddictslmaoo)
+
+# 🙌 Join the **doSonarAPI** Adopters list 
+📢 If doSonarAPI is part of your organization's toolkit, we kindly encourage you to include your company's name in our Adopters list. 🙏 This not only significantly boosts the project's visibility and reputation but also represents a small yet impactful way to give back to the project.
+
+| Organization  | Description of Use / Referenc |
+|---|---|
+|  [CloudAppi](https://cloudappi.net/)  | Apification and generation of microservices |
+
+# 👩🏽‍💻  Contribute to ApiAddicts 
+
+We're an inclusive and open community, , and this implies that you too can become a part of our effort to enhance ApiAddicts!
+
+We're excited to prioritize tasks based on community input: you can review and collaborate through our GitHub issue tracker.
+
+Feel free to drop by and greet us on our GitHub discussion or Discord chat. You can also show your support by giving us some GitHub stars ⭐️, or by following us on Twitter, LinkedIn, and subscribing to our YouTube channel! 🚀
+
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/apiaddicts)
+
+
+## ⚙️ Features
 
 * Full compatibility with OpenAPI v2.0, v3.0.0, v3.0.1, v3.0.2 and v3.0.3
 
 ![SonarOpenApi in action](sonarqube.jpg)
 
-## License
-
-Copyright 2021 Apiaddicts.
-
-Licensed under the [GNU Lesser General Public License, Version 3.0](http://www.gnu.org/licenses/lgpl.txt)
-
 <a name="install"></a>
-
 ## Installing
 
 To install the plugin, you need to compile it, then install it in your SonarQube server.
@@ -167,13 +188,6 @@ paths:
 
 As for `x-nosonar`, the `x-sonar-disable` and `x-sonar-enable` extensions accept a single string or an array of strings.
 
-## Contributing
-
-### Custom Rules
-
-If you have an idea for a rule but you are not sure that everyone needs it you can implement a [custom rule](CustomRules.md)
-available only for you.
-
 <a name="testing"></a>
 ## Testing
 
@@ -212,3 +226,6 @@ Deploy:
 
 `mvn clean deploy -Prelease`
 
+## 💛 Sponsors
+<img src="https://apiaddicts.cloudappi.net/web/image/4248/LOGOCloudappi2020Versiones-01.png" alt="cloudappi" width="150"/>
+<img src="https://apiaddicts-web.s3.eu-west-1.amazonaws.com/wp-content/uploads/2022/03/17155736/cropped-APIAddicts-logotipo_rojo.png" height = "75">
