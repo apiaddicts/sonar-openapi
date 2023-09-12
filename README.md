@@ -18,12 +18,12 @@ Sonar OpenApi (plugin) is a code analyzer for OpenAPI specifications,  is the sp
 | Organization  | Description of Use / Referenc |
 |---|---|
 |  [CloudAppi](https://cloudappi.net/)  | Apification and generation of microservices |
+| [Madrid Digital](https://www.comunidad.madrid/servicios/sede-electronica/madrid-digital/)  | Generation of microservices  |
+| [Apiquality](https://apiquality.io/)  | Generation of microservices  |
 
 # 👩🏽‍💻  Contribute to ApiAddicts 
 
-We're an inclusive and open community, , and this implies that you too can become a part of our effort to enhance ApiAddicts!
-
-We're excited to prioritize tasks based on community input: you can review and collaborate through our GitHub issue tracker.
+We're an inclusive and open community, welcoming you to join our effort to enhance ApiAddicts, and we're excited to prioritize tasks based on community input, inviting you to review and collaborate through our GitHub issue tracker.
 
 Feel free to drop by and greet us on our GitHub discussion or Discord chat. You can also show your support by giving us some GitHub stars ⭐️, or by following us on Twitter, LinkedIn, and subscribing to our YouTube channel! 🚀
 
