@@ -1,3 +1,5 @@
+package org.apiaddicts.apitools.dosonarapi.api.v4;
+
 /*
  * doSonarAPI: SonarQube OpenAPI Plugin
  * Copyright (C) 2021-2022 Apiaddicts
@@ -17,17 +19,16 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package org.apiaddicts.apitools.dosonarapi.api.v3;
 
 import org.apiaddicts.apitools.dosonarapi.openapi.BaseNodeTest;
 import org.junit.Test;
 import org.apiaddicts.apitools.dosonarapi.sslr.yaml.grammar.JsonNode;
 import org.apiaddicts.apitools.dosonarapi.sslr.yaml.grammar.ValidationException;
 
-public class InfoTest extends BaseNodeTest<OpenApi3Grammar> {
+public class InfoTest extends BaseNodeTest<AsyncApiGrammar> {
   @Test
   public void can_parse_info_with_missing_optionals() {
-    JsonNode node = parseResource(OpenApi3Grammar.INFO, "/models/shared/info/minimal.yaml");
+    JsonNode node = parseResource(AsyncApiGrammar.INFO, "/models/shared/info/minimal.yaml");
 
     assertMissing(node.at("/description"));
     assertMissing(node.at("/termsOfService"));
@@ -41,14 +42,14 @@ public class InfoTest extends BaseNodeTest<OpenApi3Grammar> {
 
   @Test
   public void can_parse_info_with_flow() {
-    JsonNode node = parseResource(OpenApi3Grammar.INFO, "/models/shared/info/withFlow.yaml");
+    JsonNode node = parseResource(AsyncApiGrammar.INFO, "/models/shared/info/withFlow.yaml");
 
     assertEquals("\nThis is a multiline description", node, "/description");
   }
 
   @Test
   public void can_parse_full_info() {
-    JsonNode node = parseResource(OpenApi3Grammar.INFO, "/models/shared/info/full.yaml");
+    JsonNode node = parseResource(AsyncApiGrammar.INFO, "/models/shared/info/full.yaml");
 
     assertEquals("http://example.com/terms/", node, "/termsOfService");
     assertEquals("API Support", node, "/contact/name");
@@ -60,6 +61,7 @@ public class InfoTest extends BaseNodeTest<OpenApi3Grammar> {
 
   @Test(expected = ValidationException.class)
   public void throws_when_parsing_incomplete_object() {
-    parseResource(OpenApi3Grammar.INFO, "/models/shared/info/incomplete.yaml");
+    parseResource(AsyncApiGrammar.INFO, "/models/shared/info/incomplete.yaml");
   }
 }
+
