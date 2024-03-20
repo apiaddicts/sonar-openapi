@@ -1,5 +1,7 @@
 package org.apiaddicts.apitools.dosonarapi.api.v4;
 
+import org.apiaddicts.apitools.dosonarapi.api.v3.OpenApi3Grammar;
+
 /*
  * doSonarAPI: SonarQube OpenAPI Plugin
  * Copyright (C) 2021-2022 Apiaddicts

@@ -27,6 +27,16 @@ public enum AsyncApiGrammar implements GrammarRuleKey {
   DESCRIPTION,
   CONTACT,
   LICENSE,
+  CHANNEL,
+  REF,
+  HEADERS_SCHEMA,
+  EXAMPLE,
+  PAYLOAD_SCHEMA,
+  SERVER_BINDING,
+  CHANNEL_BINDING,
+  OPERATION_BINDING,
+  MESSAGE_BINDING,
+  MESSAGES,
   
   // Secciones específicas de AsyncAPI
   CHANNEL_ITEM,
@@ -111,32 +121,82 @@ public enum AsyncApiGrammar implements GrammarRuleKey {
     
       }
 
-    private static void buildChannels(YamlGrammarBuilder b) {
+      private static void buildChannels(YamlGrammarBuilder b) {
         b.rule(CHANNELS).is(b.object(
-            b.patternProperty(".+", CHANNEL_ITEM)
-        ));
-        b.rule(CHANNEL_ITEM).is(b.object(
-            b.property("description", b.string()),
+            b.patternProperty("^/.*", CHANNEL),
+            b.patternProperty(EXTENSION_PATTERN, b.anything())));
+        b.rule(CHANNEL).is(b.object(
+            b.property("description", DESCRIPTION),
             b.property("subscribe", OPERATION),
             b.property("publish", OPERATION),
-            b.property("bindings", CHANNEL_BINDINGS)
-        ));
+            b.property("parameters", b.array(b.firstOf(REF, PARAMETER))),
+            b.property("bindings", CHANNEL_BINDINGS),
+            b.patternProperty(EXTENSION_PATTERN, b.anything())));
+        b.rule(OPERATION).is(b.object(
+            b.property("operationId", b.string()),
+            b.property("summary", b.string()),
+            b.property("description", DESCRIPTION),
+            b.property("tags", b.array(b.string())),
+            b.property("externalDocs", EXTERNAL_DOC),
+            b.property("message", b.firstOf(REF, MESSAGE)),
+            b.property("bindings", OPERATION_BINDINGS),
+            b.patternProperty(EXTENSION_PATTERN, b.anything())));
+        b.rule(MESSAGE).is(b.object(
+            b.property("contentType", b.string()),
+            b.property("headers", b.firstOf(REF, HEADERS_SCHEMA)),
+            b.property("payload", b.firstOf(REF, PAYLOAD_SCHEMA)),
+            b.property("correlationId", b.firstOf(REF, CORRELATION_ID)),
+            b.property("schemaFormat", b.string()),
+            b.property("name", b.string()),
+            b.property("title", b.string()),
+            b.property("summary", b.string()),
+            b.property("description", DESCRIPTION),
+            b.property("tags", b.array(TAG)),
+            b.property("externalDocs", EXTERNAL_DOC),
+            b.property("examples", b.array(EXAMPLE)),
+            b.property("bindings", MESSAGE_BINDINGS),
+            b.patternProperty(EXTENSION_PATTERN, b.anything())));
+        b.rule(CHANNEL_BINDINGS).is(b.object(
+            // Channel bindings can vary based on the protocol (HTTP, WebSocket, AMQP, etc.)
+            b.patternProperty("^x-", b.anything()), // Extension for custom bindings
+            b.patternProperty(EXTENSION_PATTERN, b.anything())));
+        b.rule(OPERATION_BINDINGS).is(b.object(
+            // Operation bindings can vary based on the protocol
+            b.patternProperty("^x-", b.anything()), // Extension for custom bindings
+            b.patternProperty(EXTENSION_PATTERN, b.anything())));
+        b.rule(MESSAGE_BINDINGS).is(b.object(
+            // Message bindings can vary based on the protocol
+            b.patternProperty("^x-", b.anything()), // Extension for custom bindings
+            b.patternProperty(EXTENSION_PATTERN, b.anything())));
     }
-
+    
     private static void buildComponents(YamlGrammarBuilder b) {
-        b.rule(COMPONENTS).is(b.object(
-            b.property("messages", b.object(b.patternProperty(".+", MESSAGE))),
-            b.property("schemas", b.object(b.patternProperty(".+", SCHEMA))),
-            b.property("securitySchemes", b.object(b.patternProperty(".+", SECURITY_SCHEME))),
-            b.property("messageTraits", b.object(b.patternProperty(".+", MESSAGE_TRAIT))),
-            b.property("operationTraits", b.object(b.patternProperty(".+", OPERATION_TRAIT))),
-            b.property("serverBindings", b.object(b.patternProperty(".+", SERVER_BINDINGS_COMPONENT))),
-            b.property("channelBindings", b.object(b.patternProperty(".+", CHANNEL_BINDINGS_COMPONENT))),
-            b.property("messageBindings", b.object(b.patternProperty(".+", MESSAGE_BINDINGS_COMPONENT))),
-            b.property("operationBindings", b.object(b.patternProperty(".+", OPERATION_BINDINGS_COMPONENT))),
-            b.patternProperty(EXTENSION_PATTERN, b.anything())
-        ));
-    }
+      b.rule(COMPONENTS).is(b.object(
+          b.property("schemas", b.object(
+              b.patternProperty(".+", SCHEMA))),
+          b.property("messages", b.object(
+              b.patternProperty(".+", MESSAGE))),
+          b.property("securitySchemes", b.object(
+              b.patternProperty(".+", SECURITY_SCHEME))),
+          b.property("parameters", b.object(
+              b.patternProperty(".+", PARAMETER))),
+          b.property("correlationIds", b.object(
+              b.patternProperty(".+", CORRELATION_ID))),
+          b.property("operationTraits", b.object(
+              b.patternProperty(".+", OPERATION_TRAIT))),
+          b.property("messageTraits", b.object(
+              b.patternProperty(".+", MESSAGE_TRAIT))),
+          b.property("serverBindings", b.object(
+              b.patternProperty(".+", SERVER_BINDING))),
+          b.property("channelBindings", b.object(
+              b.patternProperty(".+", CHANNEL_BINDING))),
+          b.property("operationBindings", b.object(
+              b.patternProperty(".+", OPERATION_BINDING))),
+          b.property("messageBindings", b.object(
+              b.patternProperty(".+", MESSAGE_BINDING))),
+          b.patternProperty(EXTENSION_PATTERN, b.anything())));
+  }
+  
 
     // Implementación de otros métodos build...
 }

@@ -1,0 +1,15 @@
+url: https://{username}.gigantic-server.com:{port}/{basePath}
+protocol: mqtt
+description: The production API server
+variables:
+  username:
+    default: demo
+    description: this value is assigned by the service provider, in this example `gigantic-server.com`.
+  port:
+    enum:
+      - '1883' 
+      - '8883' 
+    default: '1883'
+  basePath: 
+    default: 'v2'
+    description: Represents a base topic in MQTT, similar to base path in HTTP APIs.
