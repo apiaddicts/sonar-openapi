@@ -114,7 +114,8 @@ public enum OpenApi3Grammar implements GrammarRuleKey {
       b.mandatoryProperty("name", b.string()),
       b.property("description", DESCRIPTION),
       b.property("externalDocs", EXTERNAL_DOC),
-      b.patternProperty(EXTENSION_PATTERN, b.anything())));
+      b.patternProperty(EXTENSION_PATTERN, b.anything())
+    ));
   }
 
   private static void buildSecurityDefinitions(YamlGrammarBuilder b) {

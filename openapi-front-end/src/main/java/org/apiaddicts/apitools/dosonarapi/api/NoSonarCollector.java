@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 
 import org.apiaddicts.apitools.dosonarapi.api.v2.OpenApi2Grammar;
 import org.apiaddicts.apitools.dosonarapi.api.v3.OpenApi3Grammar;
+import org.apiaddicts.apitools.dosonarapi.api.v4.AsyncApiGrammar;
 import org.apiaddicts.apitools.dosonarapi.sslr.yaml.grammar.JsonNode;
 
 import static org.apiaddicts.apitools.dosonarapi.sslr.yaml.grammar.YamlGrammar.BLOCK_MAPPING;
@@ -61,7 +62,7 @@ public class NoSonarCollector extends OpenApiVisitor {
 
   @Override
   protected boolean isSubscribed(AstNodeType nodeType) {
-    return nodeType instanceof OpenApi2Grammar || nodeType instanceof OpenApi3Grammar || nodeType == BLOCK_MAPPING || nodeType == FLOW_MAPPING;
+    return nodeType instanceof OpenApi2Grammar || nodeType instanceof OpenApi3Grammar || nodeType == BLOCK_MAPPING || nodeType == FLOW_MAPPING || nodeType instanceof AsyncApiGrammar;
   }
 
   @Override

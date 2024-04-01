@@ -17,20 +17,21 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package org.apiaddicts.apitools.dosonarapi.api.v3;
+package org.apiaddicts.apitools.dosonarapi.checks;
 
-import org.apiaddicts.apitools.dosonarapi.openapi.BaseNodeTest;
-import org.junit.Test;
-import org.apiaddicts.apitools.dosonarapi.sslr.yaml.grammar.JsonNode;
+import java.util.Arrays;
+import java.util.List;
 
-public class ComponentsTest extends BaseNodeTest<OpenApi3Grammar> {
-  @Test
-  public void can_parse_spec_reference() {
-    JsonNode node = parseResource(OpenApi3Grammar.COMPONENTS, "/models/v3/components.yaml");
+public final class AsyncApiCheckList {
+  public static final String REPOSITORY_KEY = "openapi";
 
-    assertPropertyKeys(node, "/schemas").containsExactlyInAnyOrder("Category", "Tag");
-    assertPropertyKeys(node, "/responses").containsExactlyInAnyOrder("NotFound", "IllegalInput", "GeneralError");
-    assertPropertyKeys(node, "/parameters").containsExactlyInAnyOrder("skipParam", "limitParam");
-    assertPropertyKeys(node, "/securitySchemes").containsExactlyInAnyOrder("api_key", "petstore_auth");
+  private AsyncApiCheckList() {
+  }
+
+  public static List<Class<?>> getChecks() {
+    return Arrays.asList(
+      ChannelMaskingCheck.class
+    );
   }
 }
+
