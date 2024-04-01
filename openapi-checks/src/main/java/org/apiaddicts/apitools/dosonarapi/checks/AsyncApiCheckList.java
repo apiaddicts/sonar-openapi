@@ -23,14 +23,15 @@ import java.util.Arrays;
 import java.util.List;
 
 public final class AsyncApiCheckList {
-  public static final String REPOSITORY_KEY = "openapi";
+  public static final String REPOSITORY_KEY = "asyncapi";
 
   private AsyncApiCheckList() {
   }
 
   public static List<Class<?>> getChecks() {
     return Arrays.asList(
-      ChannelMaskingCheck.class
+      ChannelMaskingCheck.class,
+      AsyncApiParsingErrorCheck.class
     );
   }
 }

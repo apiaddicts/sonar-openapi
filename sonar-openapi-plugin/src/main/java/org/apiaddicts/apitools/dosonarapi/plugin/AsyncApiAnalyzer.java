@@ -91,7 +91,7 @@ public class AsyncApiAnalyzer {
         visitorContext = new AsyncApiVisitorContext(targetParser.parse(content), targetParser.getIssues(), asyncApiFile); 
         saveMeasures(inputFile, visitorContext);
     } catch (ValidationException e) {
-        visitorContext = new AsyncApiVisitorContext(asyncApiFile, e); // Use asyncApiFile here
+        visitorContext = new AsyncApiVisitorContext(asyncApiFile, e); 
         LOG.error("Error during file validation: " + inputFile.filename() + "\n" + e.formatMessage());
     } catch (RecognitionException e) {
         visitorContext = new AsyncApiVisitorContext(asyncApiFile, e); // Use asyncApiFile here
