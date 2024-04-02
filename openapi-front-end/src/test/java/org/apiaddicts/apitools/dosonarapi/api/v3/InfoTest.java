@@ -24,8 +24,6 @@ import org.junit.Test;
 import org.apiaddicts.apitools.dosonarapi.sslr.yaml.grammar.JsonNode;
 import org.apiaddicts.apitools.dosonarapi.sslr.yaml.grammar.ValidationException;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 public class InfoTest extends BaseNodeTest<OpenApi3Grammar> {
   @Test
   public void can_parse_info_with_missing_optionals() {

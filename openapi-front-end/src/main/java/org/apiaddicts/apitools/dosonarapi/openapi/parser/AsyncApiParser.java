@@ -19,30 +19,27 @@
  */
 package org.apiaddicts.apitools.dosonarapi.openapi.parser;
 
-import org.apiaddicts.apitools.dosonarapi.api.v2.OpenApi2Grammar;
-import org.apiaddicts.apitools.dosonarapi.api.v3.OpenApi3Grammar;
-import org.apiaddicts.apitools.dosonarapi.api.v4.AsyncApiGrammar;
 import org.apiaddicts.apitools.dosonarapi.openapi.OpenApiConfiguration;
+import org.apiaddicts.apitools.dosonarapi.api.v4.AsyncApiGrammar;
 import org.apiaddicts.apitools.dosonarapi.sslr.yaml.grammar.YamlParser;
 
-public class OpenApiParser {
-  private OpenApiParser() {
+public class AsyncApiParser {
+  private AsyncApiParser() {
     // Hidden utility class constructor
   }
 
-  public static YamlParser createV2(OpenApiConfiguration configuration) {
-    return YamlParser.builder().withCharset(configuration.getCharset()).withGrammar(OpenApi2Grammar.create()).withStrictValidation(configuration.isStrict()).build();
-  }
-
-  public static YamlParser createV3(OpenApiConfiguration configuration) {
-    return YamlParser.builder().withCharset(configuration.getCharset()).withGrammar(OpenApi3Grammar.create()).withStrictValidation(configuration.isStrict()).build();
-  }
-
-  public static YamlParser createV4(OpenApiConfiguration configuration) {
-    return YamlParser.builder().withCharset(configuration.getCharset()).withGrammar(AsyncApiGrammar.create()).withStrictValidation(configuration.isStrict()).build();
+  public static YamlParser createAsyncApi(OpenApiConfiguration configuration) {
+    return YamlParser.builder()
+        .withCharset(configuration.getCharset())
+        .withGrammar(AsyncApiGrammar.create())
+        .withStrictValidation(configuration.isStrict())
+        .build();
   }
 
   public static YamlParser createGeneric(OpenApiConfiguration configuration) {
-    return YamlParser.builder().withCharset(configuration.getCharset()).withStrictValidation(configuration.isStrict()).build();
+    return YamlParser.builder()
+        .withCharset(configuration.getCharset())
+        .withStrictValidation(configuration.isStrict())
+        .build();
   }
 }
