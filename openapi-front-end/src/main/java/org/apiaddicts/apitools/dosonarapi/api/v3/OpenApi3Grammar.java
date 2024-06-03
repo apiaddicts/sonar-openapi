@@ -151,26 +151,26 @@ public enum OpenApi3Grammar implements GrammarRuleKey {
     b.rule(IMPLICIT_FLOW).is(b.object(
       b.mandatoryProperty("authorizationUrl", b.string()),
       b.property("refreshUrl", b.string()),
-      b.mandatoryProperty("scopes", b.object(
+      b.property("scopes", b.object(
         b.patternProperty(".*", b.string()))),
       b.patternProperty(EXTENSION_PATTERN, b.anything())));
     b.rule(PASSWORD_FLOW).is(b.object(
       b.mandatoryProperty("tokenUrl", b.string()),
       b.property("refreshUrl", b.string()),
-      b.mandatoryProperty("scopes", b.object(
+      b.property("scopes", b.object(
         b.patternProperty(".*", b.string()))),
       b.patternProperty(EXTENSION_PATTERN, b.anything())));
     b.rule(CREDENTIALS_FLOW).is(b.object(
       b.mandatoryProperty("tokenUrl", b.string()),
       b.property("refreshUrl", b.string()),
-      b.mandatoryProperty("scopes", b.object(
+      b.property("scopes", b.object(
         b.patternProperty(".*", b.string()))),
       b.patternProperty(EXTENSION_PATTERN, b.anything())));
     b.rule(AUTH_FLOW).is(b.object(
       b.mandatoryProperty("authorizationUrl", b.string()),
       b.mandatoryProperty("tokenUrl", b.string()),
       b.property("refreshUrl", b.string()),
-      b.mandatoryProperty("scopes", b.object(
+      b.property("scopes", b.object(
         b.patternProperty(".*", b.string()))),
       b.patternProperty(EXTENSION_PATTERN, b.anything())));
     b.rule(SECURITY_REQUIREMENT).is(b.object(
