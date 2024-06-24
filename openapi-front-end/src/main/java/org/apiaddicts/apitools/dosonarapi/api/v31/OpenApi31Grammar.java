@@ -57,6 +57,7 @@ public enum OpenApi31Grammar implements GrammarRuleKey {
   SERVER_VARIABLE,
   HTTP_SECURITY_SCHEME,
   API_KEY_SECURITY_SCHEME,
+  MUTUALTLS_SECURITY_SCHEME,
   OAUTH2_SECURITY_SCHEME,
   OPENID_SECURITY_SCHEME,
   MEDIA_TYPE,
@@ -123,7 +124,7 @@ public enum OpenApi31Grammar implements GrammarRuleKey {
 
   private static void buildSecurityDefinitions(YamlGrammarBuilder b) {
     b.rule(SECURITY_SCHEME).is(
-      b.firstOf(HTTP_SECURITY_SCHEME, API_KEY_SECURITY_SCHEME, OAUTH2_SECURITY_SCHEME, OPENID_SECURITY_SCHEME));
+      b.firstOf(HTTP_SECURITY_SCHEME, API_KEY_SECURITY_SCHEME, OAUTH2_SECURITY_SCHEME, OPENID_SECURITY_SCHEME, MUTUALTLS_SECURITY_SCHEME));
     b.rule(HTTP_SECURITY_SCHEME).is(b.object(
       b.discriminant("type", "http"),
       b.property("description", DESCRIPTION),
@@ -136,6 +137,9 @@ public enum OpenApi31Grammar implements GrammarRuleKey {
       b.mandatoryProperty("name", b.string()),
       b.mandatoryProperty("in", b.firstOf("query", "header", "cookie")),
       b.patternProperty(EXTENSION_PATTERN, b.anything()))).skip();
+    b.rule(MUTUALTLS_SECURITY_SCHEME).is(b.object(
+      b.discriminant("type", "mutualTLS"),
+      b.patternProperty(EXTENSION_PATTERN, b.anything()))).skip();  
     b.rule(OAUTH2_SECURITY_SCHEME).is(b.object(
       b.discriminant("type", "oauth2"),
       b.property("description", DESCRIPTION),

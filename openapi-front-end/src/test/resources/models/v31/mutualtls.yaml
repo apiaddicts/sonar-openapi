@@ -1,0 +1,9 @@
+/secure-endpoint:
+    get:
+      summary: An endpoint secured with mutual TLS and API Key
+      security:
+        - mutualTLS: []
+        - apiKeyAuth: []
+      responses:
+        '200':
+          description: Successful response
