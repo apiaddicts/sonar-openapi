@@ -1,0 +1,9 @@
+/upload:
+  post:
+    summary: Upload a binary file
+    requestBody:
+      content:
+        application/octet-stream: {}
+    responses:
+      "200":
+        description: File uploaded successfully
