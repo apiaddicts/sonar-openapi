@@ -1,0 +1,5 @@
+parameters:
+    operationId: getExample
+    exampleParam:
+        $schema: "http://json-schema.org/draft-07/schema#"
+

@@ -1,5 +1,5 @@
 
-# 🛠️ Sonar OpenApi (plugin) ![Release](https://img.shields.io/badge/release-1.0.5-purple) ![Swagger](https://img.shields.io/badge/-openapi-%23Clojure?style=flat&logo=swagger&logoColor=white) ![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=flat&logo=openjdk&logoColor=white)  [![License: LGPL v3](https://img.shields.io/badge/license-LGPL_v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0) 
+# 🛠️ Sonar OpenApi (plugin) ![Release](https://img.shields.io/badge/release-1.1.0-purple) ![Swagger](https://img.shields.io/badge/-openapi-%23Clojure?style=flat&logo=swagger&logoColor=white) ![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=flat&logo=openjdk&logoColor=white)  [![License: LGPL v3](https://img.shields.io/badge/license-LGPL_v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0) 
 
 Sonar OpenApi (plugin) is a code analyzer for OpenAPI specifications,  is the spiritual successor of [SonarOpenApi](https://github.com/societe-generale/sonar-openapi), carrying on from the point where it left off with support of Apiaddicts community.
 

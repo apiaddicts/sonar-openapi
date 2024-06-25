@@ -1,0 +1,7 @@
+properties:
+  age:
+    type: integer
+    exclusiveMinimum: 7
+  price:
+    type: number
+    exclusiveMaximum: 100

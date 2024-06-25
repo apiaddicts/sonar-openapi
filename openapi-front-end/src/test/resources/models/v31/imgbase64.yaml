@@ -1,0 +1,12 @@
+/upload-image:
+  post:
+    summary: Upload an image with base64 encoding
+    requestBody:
+      content:
+        image/png:
+          schema:
+            type: string
+            contentEncoding: base64
+    responses:
+      "200":
+        description: Image uploaded successfully

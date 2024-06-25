@@ -1,0 +1,6 @@
+properties:
+  os:
+    type: string
+    examples:
+      - fedora
+      - ubuntu

@@ -1,0 +1,14 @@
+/uploadMultipart:
+  post:
+    summary: Upload a file with multipart/form-data
+    requestBody:
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            properties:
+              orderId:
+                type: integer
+              fileName:
+                type: string
+                contentMediaType: application/octet-stream
