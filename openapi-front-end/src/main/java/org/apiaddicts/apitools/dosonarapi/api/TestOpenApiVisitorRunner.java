@@ -43,20 +43,31 @@ public class TestOpenApiVisitorRunner {
     }
   }
 
-  public static void scanFileForComments(File file, boolean isV2, OpenApiVisitor... visitors) {
-    OpenApiVisitorContext context = createContext(file, isV2);
+  public static void scanFileForComments(File file, boolean isV2, boolean isV3, boolean isV31, OpenApiVisitor... visitors) {
+    OpenApiVisitorContext context = createContext(file, isV2, isV3, isV31);
     for (OpenApiVisitor visitor : visitors) {
       visitor.scanFile(context);
     }
   }
 
   public static OpenApiVisitorContext createContext(File file) {
-    return createContext(file, false);
+    return createContext(file, false, false, false);
   }
 
-  public static OpenApiVisitorContext createContext(File file, boolean v2) {
+  public static OpenApiVisitorContext createContext(File file, boolean isV2) {
+    return createContext(file, isV2, false, false);
+  }
+
+  public static OpenApiVisitorContext createContext(File file, boolean isV2, boolean isV3, boolean isV31) {
     OpenApiConfiguration configuration = new OpenApiConfiguration(StandardCharsets.UTF_8, true);
-    YamlParser parser = v2 ? OpenApiParser.createV2(configuration) : OpenApiParser.createV3(configuration);
+    YamlParser parser;
+    if (isV2) {
+      parser = OpenApiParser.createV2(configuration);
+    } else if (isV31) {
+      parser = OpenApiParser.createV31(configuration);
+    } else {
+      parser = OpenApiParser.createV3(configuration);
+    }
     return createContext(file, parser);
   }
 
@@ -78,10 +89,10 @@ public class TestOpenApiVisitorRunner {
    * FIXME: Try to solve in the yaml parser lib
    */
   private static String getContent(File file) throws IOException {
-    String [] lines = new String(Files.readAllBytes(Paths.get(file.getPath()))).split("\n");
+    String[] lines = new String(Files.readAllBytes(Paths.get(file.getPath()))).split("\n");
     for (int i = 1; i < lines.length; i++) {
       if (!lines[i].trim().isEmpty()) continue;
-      int n = lines[i-1].indexOf(lines[i-1].trim());
+      int n = lines[i - 1].indexOf(lines[i - 1].trim());
       if (n < 0) n = 0;
       lines[i] = String.join("", Collections.nCopies(n, " ")) + "#";
     }
