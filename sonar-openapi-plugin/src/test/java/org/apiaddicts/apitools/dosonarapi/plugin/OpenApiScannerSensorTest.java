@@ -177,6 +177,18 @@ public class OpenApiScannerSensorTest {
     assertThat(context.allIssues()).hasSize(0);
     assertThat(context.allAnalysisErrors()).hasSize(0);
   }
+   
+  @Test
+  public void parse_yaml_tabs_ok_31() {
+    inputFile("file2.yaml");
+    activeRules = (new ActiveRulesBuilder())
+            .create(RuleKey.of(CheckList.REPOSITORY_KEY, ParsingErrorCheck.CHECK_KEY))
+            .activate()
+            .build();
+    sensor().execute(context);
+    assertThat(context.allIssues()).hasSize(0);
+    assertThat(context.allAnalysisErrors()).hasSize(0);
+  }
 
   //@Test
   public void test_folder() {

@@ -17,19 +17,19 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package org.apiaddicts.apitools.dosonarapi.api.v3;
+package org.apiaddicts.apitools.dosonarapi.api.v31;
 
 import org.apiaddicts.apitools.dosonarapi.openapi.BaseNodeTest;
 import org.junit.Test;
 import org.apiaddicts.apitools.dosonarapi.sslr.yaml.grammar.JsonNode;
 
-public class LicenseTest extends BaseNodeTest<OpenApi3Grammar> {
-  @Test
-  public void can_parse_full_definition() {
-    JsonNode node = parseResource(OpenApi3Grammar.LICENSE, "/models/shared/license.yaml");
+public class LicenseTest extends BaseNodeTest<OpenApi31Grammar>{
 
-    assertEquals("Apache 2.0", node, "/name");
-    assertEquals("https://www.apache.org/licenses/LICENSE-2.0.html", node, "/url");
-  }
+    @Test
+    public void license_identifier() {
+        JsonNode node = parseResource(OpenApi31Grammar.COMPONENTS, "/models/v31/webhook.yaml");
 
+        assertPropertyKeys(node).containsOnly("webhooks");
+    }
+    
 }

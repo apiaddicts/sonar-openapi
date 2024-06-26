@@ -30,4 +30,11 @@ public class WebhooksTest extends BaseNodeTest<OpenApi31Grammar> {
 
     assertPropertyKeys(node).containsOnly("webhooks");
   }
+
+  @Test
+  public void webhook_test() {
+    JsonNode node = parseResource(OpenApi31Grammar.WEBHOOKS, "/models/v31/webhookfirstlevel.yaml");
+
+    assertPropertyKeys(node).containsOnly("newBooking");
+  }
 }

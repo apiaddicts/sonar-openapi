@@ -119,10 +119,20 @@ public class OpenApiAnalyzer {
       if (!content.contains("swagger") && !content.contains("openapi")) return;
       JsonNode rootNode = OpenApiParser.createGeneric(configuration).parse(content);
       boolean isV2 = !rootNode.at("/swagger").isMissing();
-      boolean isV3 = !rootNode.at("/openapi").isMissing();
+      JsonNode openapiNode = rootNode.at("/openapi");
+      boolean isV3 = !openapiNode.isMissing() && (
+          openapiNode.getTokenValue().equals("3.0.0") ||
+          openapiNode.getTokenValue().equals("3.0.1") ||
+          openapiNode.getTokenValue().equals("3.0.2") ||
+          openapiNode.getTokenValue().equals("3.0.3")
+      );
+      
+      // Verificar si el nodo "/openapi" está presente y su valor es 3.1.0 para isV31
+      boolean isV31 = !openapiNode.isMissing() && openapiNode.getTokenValue().equals("3.1.0");
       YamlParser targetParser = null;
       if (isV2) targetParser = OpenApiParser.createV2(configuration);
       if (isV3) targetParser = OpenApiParser.createV3(configuration);
+      if (isV31) targetParser = OpenApiParser.createV31(configuration);
       if (targetParser == null) return;
 
       visitorContext = new OpenApiVisitorContext(targetParser.parse(content), targetParser.getIssues(), openApiFile);

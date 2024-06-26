@@ -91,6 +91,7 @@ public enum OpenApi31Grammar implements GrammarRuleKey {
       b.mandatoryProperty("info", INFO),
       b.property("servers", b.array(SERVER)),
       b.mandatoryProperty("paths", PATHS),
+      b.property("webhooks", WEBHOOKS),
       b.property("components", COMPONENTS),
       b.property("security", b.array(SECURITY_REQUIREMENT)),
       b.property("tags", b.array(TAG)),
@@ -107,6 +108,7 @@ public enum OpenApi31Grammar implements GrammarRuleKey {
     buildInfo(b);
     buildServer(b);
     buildPaths(b);
+    buildWebhooks(b);
     buildComponents(b);
     buildSecurityDefinitions(b);
     buildTags(b);
@@ -311,7 +313,6 @@ public enum OpenApi31Grammar implements GrammarRuleKey {
     buildParameters(b);
     buildResponses(b);
     buildSchema(b);
-    buildWebhooks(b);
     buildCallbacks(b);
   }
 
@@ -343,15 +344,18 @@ public enum OpenApi31Grammar implements GrammarRuleKey {
       b.property("$schema", b.string()),
       b.property("additionalProperties", b.firstOf(b.bool(), REF, SCHEMA)),
       b.property("description", DESCRIPTION),
+      b.property("unevaluatedProperties", b.bool()),
       b.property("format", b.string()),
       b.property("default", b.anything()),
       b.property("nullable", b.bool()),
       b.property("discriminator", DISCRIMINATOR),
+      b.property("const", b.anything()),
       b.property("readOnly", b.bool()),
       b.property("writeOnly", b.bool()),
       b.property("xml", XML),
       b.property("externalDocs", EXTERNAL_DOC),
       b.property("examples", b.array(b.anything())),
+      b.property("example", b.anything()),
       b.property("deprecated", b.bool()),
       b.patternProperty(EXTENSION_PATTERN, b.anything())));
     b.rule(SCHEMA_PROPERTIES).is(b.object(b.patternProperty(".*", b.firstOf(REF, SCHEMA))));
@@ -370,7 +374,7 @@ public enum OpenApi31Grammar implements GrammarRuleKey {
 
   private static void buildWebhooks(YamlGrammarBuilder b) {
     b.rule(WEBHOOKS).is(b.object(
-      b.property("webhooks", WEBHOOK),  // Usar una propiedad simple en lugar de patternProperty
+      b.patternProperty("^.*", WEBHOOK),  
       b.patternProperty(EXTENSION_PATTERN, b.anything())));
     b.rule(WEBHOOK).is(b.object(
       b.property("$ref", b.string()),
@@ -477,6 +481,7 @@ public enum OpenApi31Grammar implements GrammarRuleKey {
     b.rule(LICENSE).is(b.object(
       b.mandatoryProperty("name", b.string()),
       b.property("url", b.string()),
+      b.property("identifier", b.string()),
       b.patternProperty(EXTENSION_PATTERN, b.anything())));
   }
 }
