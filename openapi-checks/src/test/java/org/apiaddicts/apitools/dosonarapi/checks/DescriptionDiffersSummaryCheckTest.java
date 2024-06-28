@@ -25,11 +25,11 @@ import org.apiaddicts.apitools.dosonarapi.OpenApiCheckVerifier;
 public class DescriptionDiffersSummaryCheckTest {
   @Test
   public void verify_in_v2() {
-    OpenApiCheckVerifier.verify("src/test/resources/checks/v2/different-description.yaml", new DescriptionDiffersSummaryCheck(), true);
+    OpenApiCheckVerifier.verify("src/test/resources/checks/v2/different-description.yaml", new DescriptionDiffersSummaryCheck(), true, false, false);
   }
 
   @Test
   public void verify_in_v3() {
-    OpenApiCheckVerifier.verify("src/test/resources/checks/v3/different-description.yaml", new DescriptionDiffersSummaryCheck(), false);
+    OpenApiCheckVerifier.verify("src/test/resources/checks/v3/different-description.yaml", new DescriptionDiffersSummaryCheck(), false, true, false);
   }
 }

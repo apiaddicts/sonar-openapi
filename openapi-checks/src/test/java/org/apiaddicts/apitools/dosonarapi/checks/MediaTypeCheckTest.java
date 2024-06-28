@@ -30,12 +30,12 @@ import static org.apiaddicts.apitools.dosonarapi.checks.MediaTypeCheck.MIME_TYPE
 public class MediaTypeCheckTest {
   @Test
   public void verify_media_range_in_v3() {
-    OpenApiCheckVerifier.verify("src/test/resources/checks/v3/media-type.yaml", new MediaTypeCheck(), false);
+    OpenApiCheckVerifier.verify("src/test/resources/checks/v3/media-type.yaml", new MediaTypeCheck(), false, true, false);
   }
 
   @Test
   public void verify_media_type_in_v2() {
-    OpenApiCheckVerifier.verify("src/test/resources/checks/v2/media-type.yaml", new MediaTypeCheck(), true);
+    OpenApiCheckVerifier.verify("src/test/resources/checks/v2/media-type.yaml", new MediaTypeCheck(), true, false, false);
   }
 
   @Test

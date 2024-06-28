@@ -25,12 +25,12 @@ import org.apiaddicts.apitools.dosonarapi.OpenApiCheckVerifier;
 public class NoContentIn204CheckTest {
   @Test
   public void detects_return_codes_failures_v2() {
-    OpenApiCheckVerifier.verify("src/test/resources/checks/v2/no-content-in-204.yaml", new NoContentIn204Check(), true);
+    OpenApiCheckVerifier.verify("src/test/resources/checks/v2/no-content-in-204.yaml", new NoContentIn204Check(), true, false, false);
   }
 
   @Test
   public void detects_return_codes_failures_v3() {
-    OpenApiCheckVerifier.verify("src/test/resources/checks/v3/no-content-in-204.yaml", new NoContentIn204Check(), false);
+    OpenApiCheckVerifier.verify("src/test/resources/checks/v3/no-content-in-204.yaml", new NoContentIn204Check(), false, true, false);
   }
 
 }

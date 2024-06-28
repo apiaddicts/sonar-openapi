@@ -25,6 +25,6 @@ import org.apiaddicts.apitools.dosonarapi.OpenApiCheckVerifier;
 public class AtMostOneBodyParameterCheckTest {
   @Test
   public void verify_in_v2() {
-    OpenApiCheckVerifier.verify("src/test/resources/checks/v2/many-body-params.yaml", new AtMostOneBodyParameterCheck(), true);
+    OpenApiCheckVerifier.verify("src/test/resources/checks/v2/many-body-params.yaml", new AtMostOneBodyParameterCheck(), true, false, false);
   }
 }

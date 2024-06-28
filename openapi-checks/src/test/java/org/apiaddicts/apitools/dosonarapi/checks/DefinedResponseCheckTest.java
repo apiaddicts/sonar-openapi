@@ -25,11 +25,11 @@ import org.apiaddicts.apitools.dosonarapi.OpenApiCheckVerifier;
 public class DefinedResponseCheckTest {
     @Test
     public void verify_media_type_in_v2() {
-        OpenApiCheckVerifier.verify("src/test/resources/checks/v2/defined-response.yaml", new DefinedResponseCheck(), true);
+        OpenApiCheckVerifier.verify("src/test/resources/checks/v2/defined-response.yaml", new DefinedResponseCheck(), true, false, false);
     }
 
     @Test
     public void verify_media_type_in_v3() {
-        OpenApiCheckVerifier.verify("src/test/resources/checks/v3/defined-response.yaml", new DefinedResponseCheck(), false);
+        OpenApiCheckVerifier.verify("src/test/resources/checks/v3/defined-response.yaml", new DefinedResponseCheck(), false, true, false);
     }
 }

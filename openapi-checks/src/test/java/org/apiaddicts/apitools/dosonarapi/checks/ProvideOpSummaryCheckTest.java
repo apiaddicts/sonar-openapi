@@ -25,11 +25,11 @@ import org.apiaddicts.apitools.dosonarapi.OpenApiCheckVerifier;
 public class ProvideOpSummaryCheckTest {
   @Test
   public void verify_in_v2() {
-    OpenApiCheckVerifier.verify("src/test/resources/checks/v2/provide-summary.yaml", new ProvideOpSummaryCheck(), true);
+    OpenApiCheckVerifier.verify("src/test/resources/checks/v2/provide-summary.yaml", new ProvideOpSummaryCheck(), true, false, false);
   }
 
   @Test
   public void verify_in_v3() {
-    OpenApiCheckVerifier.verify("src/test/resources/checks/v3/provide-summary.yaml", new ProvideOpSummaryCheck(), false);
+    OpenApiCheckVerifier.verify("src/test/resources/checks/v3/provide-summary.yaml", new ProvideOpSummaryCheck(), false, true, false);
   }
 }

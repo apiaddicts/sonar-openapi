@@ -25,21 +25,21 @@ import org.apiaddicts.apitools.dosonarapi.OpenApiCheckVerifier;
 public class ContactValidEmailCheckTest {
     @Test
     public void verify_contact_emailFormat_in_v2() {
-        OpenApiCheckVerifier.verify("src/test/resources/checks/v2/contact-validemail.yaml", new ContactValidEmailCheck(), true);
+        OpenApiCheckVerifier.verify("src/test/resources/checks/v2/contact-validemail.yaml", new ContactValidEmailCheck(), true, false, false);
     }
 
     @Test
     public void verify_contact_emailFormat_in_v3() {
-        OpenApiCheckVerifier.verify("src/test/resources/checks/v3/contact-validemail.yaml", new ContactValidEmailCheck(), false);
+        OpenApiCheckVerifier.verify("src/test/resources/checks/v3/contact-validemail.yaml", new ContactValidEmailCheck(), false, true, false);
     }
 
     @Test
     public void verify_contact_emailFormat_in_v2_2() {
-        OpenApiCheckVerifier.verify("src/test/resources/checks/v2/contact-validemail_2.yaml", new ContactValidEmailCheck(), true);
+        OpenApiCheckVerifier.verify("src/test/resources/checks/v2/contact-validemail_2.yaml", new ContactValidEmailCheck(), true, false, false);
     }
 
     @Test
     public void verify_contact_emailFormat_in_v3_2() {
-        OpenApiCheckVerifier.verify("src/test/resources/checks/v3/contact-validemail_2.yaml", new ContactValidEmailCheck(), false);
+        OpenApiCheckVerifier.verify("src/test/resources/checks/v3/contact-validemail_2.yaml", new ContactValidEmailCheck(), false, true, false);
     }
 }
