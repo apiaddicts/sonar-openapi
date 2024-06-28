@@ -38,12 +38,12 @@ public class PathMaskeradingCheckTest {
 
   @Test
   public void verify_path_maskerading_in_v2() {
-    OpenApiCheckVerifier.verify("src/test/resources/checks/v2/path-maskerading.yaml", new PathMaskeradingCheck(), true);
+    OpenApiCheckVerifier.verify("src/test/resources/checks/v2/path-maskerading.yaml", new PathMaskeradingCheck(), true, false, false);
   }
 
   @Test
   public void verify_path_maskerading_in_v3() {
-    OpenApiCheckVerifier.verify("src/test/resources/checks/v3/path-maskerading.yaml", new PathMaskeradingCheck(), false);
+    OpenApiCheckVerifier.verify("src/test/resources/checks/v3/path-maskerading.yaml", new PathMaskeradingCheck(), false, true, false);
   }
 
   @Test

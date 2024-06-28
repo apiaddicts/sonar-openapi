@@ -65,8 +65,8 @@ public class OpenApiCheckVerifier {
 
   private List<TestIssue> expectedIssues = new ArrayList<>();
 
-  public static List<PreciseIssue> scanFileForIssues(File file, OpenApiCheck check, boolean isV2) {
-    return check.scanFileForIssues(TestOpenApiVisitorRunner.createContext(file, isV2));
+  public static List<PreciseIssue> scanFileForIssues(File file, OpenApiCheck check, boolean isV2, boolean isV3, boolean isV31) {
+    return check.scanFileForIssues(TestOpenApiVisitorRunner.createContext(file, isV2, isV3, isV31));
   }
 
   /**
@@ -74,15 +74,17 @@ public class OpenApiCheckVerifier {
    *
    * @param path The file to be analyzed
    * @param check The check to be used for the analysis
-   * @param isV2 <code>true</code> if OpenApiSpecification version 2 or <code>false</code> if version 3
+   * @param isV2 <code>true</code> if OpenApiSpecification version 2
+   * @param isV3 <code>true</code> if OpenApiSpecification version 3
+   * @param isV31 <code>true</code> if OpenApiSpecification version 3.1
    */
-  public static void verify(String path, OpenApiCheck check, boolean isV2) {
+  public static void verify(String path, OpenApiCheck check, boolean isV2, boolean isV3, boolean isV31) {
     OpenApiCheckVerifier verifier = new OpenApiCheckVerifier();
     OpenApiVisitor collector = new ExpectedIssueCollector(verifier);
     File file = new File(path);
-    TestOpenApiVisitorRunner.scanFileForComments(file, isV2, collector);
+    TestOpenApiVisitorRunner.scanFileForComments(file, isV2, isV3, isV31, collector);
 
-    Iterator<PreciseIssue> actualIssues = getActualIssues(file, check, isV2);
+    Iterator<PreciseIssue> actualIssues = getActualIssues(file, check, isV2, isV3, isV31);
     verifier.checkIssues(actualIssues);
 
     if (actualIssues.hasNext()) {
@@ -144,8 +146,8 @@ public class OpenApiCheckVerifier {
     return Ordering.natural().sortedCopy(result);
   }
 
-  private static Iterator<PreciseIssue> getActualIssues(File file, OpenApiCheck check, boolean isV2) {
-    List<PreciseIssue> issues = scanFileForIssues(file, check, isV2);
+  private static Iterator<PreciseIssue> getActualIssues(File file, OpenApiCheck check, boolean isV2, boolean isV3, boolean isV31) {
+    List<PreciseIssue> issues = scanFileForIssues(file, check, isV2, isV3, isV31);
     List<PreciseIssue> sortedIssues = Ordering.natural().<PreciseIssue>onResultOf(OpenApiCheckVerifier::line).sortedCopy(issues);
     return sortedIssues.iterator();
   }
