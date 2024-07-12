@@ -136,7 +136,7 @@ public enum OpenApi2Grammar implements GrammarRuleKey {
       b.mandatoryProperty("flow", b.firstOf("implicit", "password", "application", "accessCode")),
       b.property("authorizationUrl", b.string()),
       b.property("tokenUrl", b.string()),
-      b.mandatoryProperty("scopes", SCOPES),
+      b.property("scopes", SCOPES),
       b.patternProperty(EXTENSION_PATTERN, b.anything()))).skip();
     b.rule(SCOPES).is(b.object(
       b.patternProperty("^[^x]{2}.*", b.string()),
