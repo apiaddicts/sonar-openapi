@@ -47,7 +47,6 @@ public class OpenApiScannerSensor implements Sensor {
   }
 
   public OpenApiScannerSensor(CheckFactory checkFactory, FileLinesContextFactory fileLinesContextFactory, NoSonarFilter noSonarFilter, @Nullable OpenApiCustomRuleRepository[] customRuleRepositories) {
-    // customRulesRepositories is injected by the context, if present
     this.checks = OpenApiChecks.createOpenApiCheck(checkFactory)
       .addChecks(CheckList.REPOSITORY_KEY, CheckList.getChecks())
       .addCustomChecks(customRuleRepositories);
@@ -65,18 +64,14 @@ public class OpenApiScannerSensor implements Sensor {
   @Override
   public void execute(SensorContext context) {
     FilePredicates p = context.fileSystem().predicates();
-    //OpenApiProperties openApiProperties = new OpenApiProperties();
-
-    //scanFiles(context, p, openApiProperties.getV2FilesPattern(context), true);
-    //scanFiles(context, p, openApiProperties.getV3FilesPattern(context), false);
     scanFiles(context, p);
   }
 
-  public void scanFiles(SensorContext context, FilePredicates p/*, String[] pathPatterns, boolean isV2*/) {
+  public void scanFiles(SensorContext context, FilePredicates p) {
     Iterable<InputFile> it = context.fileSystem().inputFiles(
       p.and(p.hasType(InputFile.Type.MAIN),
-        p.hasLanguage(OpenApi.KEY)/*,
-        p.matchesPathPatterns(pathPatterns)*/));
+        p.hasLanguage(OpenApi.KEY)
+        ));
     List<InputFile> list = new ArrayList<>();
     it.forEach(list::add);
     List<InputFile> inputFiles = Collections.unmodifiableList(list);

@@ -20,12 +20,10 @@
 package org.apiaddicts.apitools.dosonarapi.plugin;
 
 import com.sonar.sslr.api.RecognitionException;
-
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-
 import org.apiaddicts.apitools.dosonarapi.openapi.OpenApiConfiguration;
 import org.apiaddicts.apitools.dosonarapi.plugin.cpd.OpenApiCpdAnalyzer;
 import org.sonar.api.batch.fs.InputFile;
