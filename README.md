@@ -32,7 +32,7 @@ Feel free to drop by and greet us on our GitHub discussion or Discord chat. You 
 
 ## ⚙️ Features
 
-* Full compatibility with OpenAPI v2.0, v3.0.0, v3.0.1, v3.0.2 and v3.0.3
+* Full compatibility with OpenAPI v2.0, v3.0.0, v3.0.1, v3.0.2, v3.0.3 and v3.1.0
 
 ![SonarOpenApi in action](sonarqube.jpg)
 
