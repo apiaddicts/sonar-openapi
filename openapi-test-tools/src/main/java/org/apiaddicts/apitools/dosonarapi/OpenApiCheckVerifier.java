@@ -35,9 +35,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
+import java.util.Objects;
 
 /**
  * It is possible to specify the absolute line number on which the issue should appear by appending {@literal "@<line>"} to "Noncompliant".
@@ -110,29 +108,35 @@ public class OpenApiCheckVerifier {
 
   private void verifyIssue(TestIssue expected, PreciseIssue actual) {
     if (line(actual) > expected.line()) {
-      fail("Missing issue at line " + expected.line());
+      throw new AssertionError("Missing issue at line " + expected.line());
     }
+
     if (line(actual) < expected.line()) {
-      fail("Unexpected issue at line " + line(actual) + ": \"" + actual.primaryLocation().message() + "\"");
+      throw new AssertionError("Unexpected issue at line " + line(actual) + ": \"" + actual.primaryLocation().message() + "\"");
     }
-    if (expected.message() != null) {
-      assertThat(actual.primaryLocation().message()).as("Bad message at line " + expected.line()).isEqualTo(expected.message());
+
+    if (expected.message() != null && !Objects.equals(actual.primaryLocation().message(), expected.message())) {
+      throw new AssertionError("Bad message at line " + expected.line());
     }
-    if (expected.effortToFix() != null) {
-      assertThat(actual.cost().intValue()).as("Bad effortToFix at line " + expected.line()).isEqualTo(expected.effortToFix());
+
+    if (expected.effortToFix() != null && actual.cost().intValue() != expected.effortToFix()) {
+      throw new AssertionError("Bad effortToFix at line " + expected.line());
     }
-    if (expected.startColumn() != null) {
-      assertThat(actual.primaryLocation().startLineOffset()).as("Bad start column at line " +
-        expected.line()).isEqualTo(expected.startColumn());
+
+    if (expected.startColumn() != null && actual.primaryLocation().startLineOffset() != expected.startColumn()) {
+      throw new AssertionError("Bad start column at line " + expected.line());
     }
-    if (expected.endColumn() != null) {
-      assertThat(actual.primaryLocation().endLineOffset()).as("Bad end column at line " + expected.line()).isEqualTo(expected.endColumn());
+
+    if (expected.endColumn() != null && actual.primaryLocation().endLineOffset() != expected.endColumn()) {
+      throw new AssertionError("Bad end column at line " + expected.line());
     }
-    if (expected.endLine() != null) {
-      assertThat(actual.primaryLocation().endLine()).as("Bad end line at line " + expected.line()).isEqualTo(expected.endLine());
+
+    if (expected.endLine() != null && actual.primaryLocation().endLine() != expected.endLine()) {
+      throw new AssertionError("Bad end line at line " + expected.line());
     }
-    if (expected.secondaryLines() != null) {
-      assertThat(secondary(actual)).as("Bad secondary locations at line " + expected.line()).isEqualTo(expected.secondaryLines());
+
+    if (expected.secondaryLines() != null && !secondary(actual).equals(expected.secondaryLines())) {
+      throw new AssertionError("Bad secondary locations at line " + expected.line());
     }
   }
 
