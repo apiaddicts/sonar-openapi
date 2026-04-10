@@ -38,8 +38,8 @@ public class FileLinesVisitorTest {
     TestOpenApiVisitorRunner.scanFile(new File(BASE_DIR, "file-lines.yaml"), visitor);
 
     // sonar extensions are counted as lines of code
-    assertThat(visitor.getLinesOfCode()).hasSize(16);
-    assertThat(visitor.getLinesOfCode()).containsOnly(1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 17, 18, 19);
+    assertThat(visitor.getLinesOfCode()).hasSize(15);
+    assertThat(visitor.getLinesOfCode()).containsOnly(1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 17, 18);
 
     assertThat(visitor.getLinesOfComments()).hasSize(3);
     assertThat(visitor.getLinesOfComments()).containsOnly(8, 15, 16);
@@ -55,8 +55,8 @@ public class FileLinesVisitorTest {
 
     TestOpenApiVisitorRunner.scanFile(new File(BASE_DIR, "embedded-newlines-lines.yaml"), visitor);
 
-    assertThat(visitor.getLinesOfCode()).hasSize(16);
-    assertThat(visitor.getLinesOfCode()).containsOnly(1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 17, 18, 19);
+    assertThat(visitor.getLinesOfCode()).hasSize(15);
+    assertThat(visitor.getLinesOfCode()).containsOnly(1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 17, 18);
   }
 
   @Test
@@ -65,7 +65,7 @@ public class FileLinesVisitorTest {
 
     TestOpenApiVisitorRunner.scanFile(new File(BASE_DIR, "multiline-lines.yaml"), visitor);
 
-    assertThat(visitor.getLinesOfCode()).hasSize(18);
-    assertThat(visitor.getLinesOfCode()).containsOnly(1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15, 16, 19, 20, 21);
+    assertThat(visitor.getLinesOfCode()).hasSize(17);
+    assertThat(visitor.getLinesOfCode()).containsOnly(1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15, 16, 19, 20);
   }
 }
