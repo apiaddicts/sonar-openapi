@@ -1,0 +1,38 @@
+type: object
+if:
+  properties:
+    type:
+      const: cat
+then:
+  properties:
+    indoor:
+      type: boolean
+else:
+  properties:
+    outdoor:
+      type: boolean
+prefixItems:
+  - type: integer
+  - type: string
+contains:
+  type: string
+minContains: 1
+maxContains: 5
+propertyNames:
+  pattern: "^[A-Za-z_][A-Za-z0-9_]*$"
+dependentRequired:
+  creditCard:
+    - billingAddress
+$defs:
+  address:
+    type: object
+    properties:
+      street:
+        type: string
+$anchor: "mySchema"
+$comment: "An example JSON Schema 2020-12 schema"
+unevaluatedItems: false
+unevaluatedProperties: false
+patternProperties:
+  "^S_":
+    type: string

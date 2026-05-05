@@ -125,12 +125,13 @@ public class OpenApiAnalyzer {
           openapiNode.getTokenValue().equals("3.0.3")
       );
       
-      // Verificar si el nodo "/openapi" está presente y su valor es 3.1.0 para isV31
       boolean isV31 = !openapiNode.isMissing() && openapiNode.getTokenValue().equals("3.1.0");
+      boolean isV32 = !openapiNode.isMissing() && openapiNode.getTokenValue().equals("3.2.0");
       YamlParser targetParser = null;
       if (isV2) targetParser = OpenApiParser.createV2(configuration);
       if (isV3) targetParser = OpenApiParser.createV3(configuration);
       if (isV31) targetParser = OpenApiParser.createV31(configuration);
+      if (isV32) targetParser = OpenApiParser.createV32(configuration);
       if (targetParser == null) return;
 
       visitorContext = new OpenApiVisitorContext(targetParser.parse(content), targetParser.getIssues(), openApiFile);

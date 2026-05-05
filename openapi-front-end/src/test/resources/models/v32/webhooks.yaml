@@ -1,0 +1,14 @@
+newBooking:
+  post:
+    summary: New Booking webhook
+    requestBody:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: string
+    responses:
+      '200':
+        description: Webhook received successfully
