@@ -44,25 +44,35 @@ public class TestOpenApiVisitorRunner {
   }
 
   public static void scanFileForComments(File file, boolean isV2, boolean isV3, boolean isV31, OpenApiVisitor... visitors) {
-    OpenApiVisitorContext context = createContext(file, isV2, isV3, isV31);
+    scanFileForComments(file, isV2, isV3, isV31, false, visitors);
+  }
+
+  public static void scanFileForComments(File file, boolean isV2, boolean isV3, boolean isV31, boolean isV32, OpenApiVisitor... visitors) {
+    OpenApiVisitorContext context = createContext(file, isV2, isV3, isV31, isV32);
     for (OpenApiVisitor visitor : visitors) {
       visitor.scanFile(context);
     }
   }
 
   public static OpenApiVisitorContext createContext(File file) {
-    return createContext(file, false, false, false);
+    return createContext(file, false, false, false, false);
   }
 
   public static OpenApiVisitorContext createContext(File file, boolean isV2) {
-    return createContext(file, isV2, false, false);
+    return createContext(file, isV2, false, false, false);
   }
 
   public static OpenApiVisitorContext createContext(File file, boolean isV2, boolean isV3, boolean isV31) {
+    return createContext(file, isV2, isV3, isV31, false);
+  }
+
+  public static OpenApiVisitorContext createContext(File file, boolean isV2, boolean isV3, boolean isV31, boolean isV32) {
     OpenApiConfiguration configuration = new OpenApiConfiguration(StandardCharsets.UTF_8, true);
     YamlParser parser;
     if (isV2) {
       parser = OpenApiParser.createV2(configuration);
+    } else if (isV32) {
+      parser = OpenApiParser.createV32(configuration);
     } else if (isV31) {
       parser = OpenApiParser.createV31(configuration);
     } else {
@@ -86,7 +96,6 @@ public class TestOpenApiVisitorRunner {
    * This method is required to avoid a parsing issue with yaml,
    * sometimes, when an empty line is followed by a comment, it breaks the parser
    *
-   * FIXME: Try to solve in the yaml parser lib
    */
   private static String getContent(File file) throws IOException {
     String[] lines = new String(Files.readAllBytes(Paths.get(file.getPath()))).split("\n");

@@ -29,6 +29,8 @@ import org.sonar.check.Rule;
 import org.apiaddicts.apitools.dosonarapi.api.OpenApiCheck;
 import org.apiaddicts.apitools.dosonarapi.api.v2.OpenApi2Grammar;
 import org.apiaddicts.apitools.dosonarapi.api.v3.OpenApi3Grammar;
+import org.apiaddicts.apitools.dosonarapi.api.v31.OpenApi31Grammar;
+import org.apiaddicts.apitools.dosonarapi.api.v32.OpenApi32Grammar;
 import org.apiaddicts.apitools.dosonarapi.sslr.yaml.grammar.JsonNode;
 
 @Rule(key = MediaTypeCheck.CHECK_KEY)
@@ -44,7 +46,7 @@ public class MediaTypeCheck extends OpenApiCheck {
 
   @Override
   public Set<AstNodeType> subscribedKinds() {
-    return Sets.newHashSet(OpenApi2Grammar.ROOT, OpenApi2Grammar.OPERATION, OpenApi3Grammar.RESPONSE, OpenApi3Grammar.REQUEST_BODY, OpenApi3Grammar.PARAMETER);
+    return Sets.newHashSet(OpenApi2Grammar.ROOT, OpenApi2Grammar.OPERATION, OpenApi3Grammar.RESPONSE, OpenApi3Grammar.REQUEST_BODY, OpenApi3Grammar.PARAMETER, OpenApi31Grammar.RESPONSE, OpenApi31Grammar.REQUEST_BODY, OpenApi31Grammar.PARAMETER, OpenApi32Grammar.RESPONSE, OpenApi32Grammar.REQUEST_BODY, OpenApi32Grammar.PARAMETER);
   }
 
   @Override
@@ -70,7 +72,8 @@ public class MediaTypeCheck extends OpenApiCheck {
   }
 
   private void visitOpenApi3(JsonNode node) {
-    if (node.getType() == OpenApi3Grammar.PARAMETER) {
+    AstNodeType type = node.getType();
+    if (type == OpenApi3Grammar.PARAMETER || type == OpenApi31Grammar.PARAMETER || type == OpenApi32Grammar.PARAMETER) {
       verifyParameterContent(node);
     } else {
       verifyContent(node);
