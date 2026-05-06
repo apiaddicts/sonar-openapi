@@ -332,6 +332,8 @@ public enum OpenApi32Grammar implements GrammarRuleKey {
     b.rule(SCHEMA).is(b.object(
       b.property("title", b.string()),
       b.property("multipleOf", b.firstOf(b.integer(), b.floating())),
+      b.property("maximum", b.firstOf(b.integer(), b.floating())),
+      b.property("minimum", b.firstOf(b.integer(), b.floating())),
       b.property("exclusiveMaximum", b.firstOf(b.integer(), b.floating())),
       b.property("exclusiveMinimum", b.firstOf(b.integer(), b.floating())),
       b.property("maxLength", b.integer()),

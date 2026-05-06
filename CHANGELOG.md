@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2024-05-05
+
+## Added
+
+### Now, support for OpenAPI 3.2 is included. These are some of the new changes:
+
+- Full implementation of the grammar and parser for the new specification.
+- Full coverage for the OpenAPI 3.2 grammar components and API visitors.
+- Completed and adjusted pending validation checks to ensure full compatibility for both OpenAPI 3.1 and 3.2.
+- Refactored error handling and loading states to improve frontend stability.
+
+
 ## [1.1.2] - 2026-03-06
 
 ## Fixed
