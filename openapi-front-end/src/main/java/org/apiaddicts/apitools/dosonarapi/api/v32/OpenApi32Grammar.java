@@ -20,6 +20,7 @@
 package org.apiaddicts.apitools.dosonarapi.api.v32;
 
 import org.sonar.sslr.grammar.GrammarRuleKey;
+import org.apiaddicts.apitools.dosonarapi.api.OpenApiGrammar;
 import org.apiaddicts.apitools.dosonarapi.sslr.yaml.grammar.YamlGrammarBuilder;
 
 @java.lang.SuppressWarnings("squid:S1192")
@@ -119,127 +120,30 @@ public enum OpenApi32Grammar implements GrammarRuleKey {
     buildWebhooks(b);
     buildComponents(b);
     buildSecurityDefinitions(b);
-    buildTags(b);
+    OpenApiGrammar.buildTags(b, TAG, DESCRIPTION, EXTERNAL_DOC);
 
     return b;
   }
 
-  private static void buildTags(YamlGrammarBuilder b) {
-    b.rule(TAG).is(b.object(
-      b.mandatoryProperty("name", b.string()),
-      b.property("description", DESCRIPTION),
-      b.property("externalDocs", EXTERNAL_DOC),
-      b.patternProperty(EXTENSION_PATTERN, b.anything())));
-  }
-
   private static void buildSecurityDefinitions(YamlGrammarBuilder b) {
-    b.rule(SECURITY_SCHEME).is(
-      b.firstOf(HTTP_SECURITY_SCHEME, API_KEY_SECURITY_SCHEME, OAUTH2_SECURITY_SCHEME, OPENID_SECURITY_SCHEME, MUTUALTLS_SECURITY_SCHEME));
-    b.rule(HTTP_SECURITY_SCHEME).is(b.object(
-      b.discriminant("type", "http"),
-      b.property("description", DESCRIPTION),
-      b.mandatoryProperty("scheme", b.string()),
-      b.property("bearerFormat", b.string()),
-      b.patternProperty(EXTENSION_PATTERN, b.anything()))).skip();
-    b.rule(API_KEY_SECURITY_SCHEME).is(b.object(
-      b.discriminant("type", "apiKey"),
-      b.property("description", DESCRIPTION),
-      b.mandatoryProperty("name", b.string()),
-      b.mandatoryProperty("in", b.firstOf("query", "header", "cookie")),
-      b.patternProperty(EXTENSION_PATTERN, b.anything()))).skip();
+    OpenApiGrammar.buildMutualTlsSecuritySetup(b, SECURITY_SCHEME,
+      HTTP_SECURITY_SCHEME, API_KEY_SECURITY_SCHEME, OAUTH2_SECURITY_SCHEME, OPENID_SECURITY_SCHEME,
+      MUTUALTLS_SECURITY_SCHEME, FLOWS, DESCRIPTION);
     b.rule(MUTUALTLS_SECURITY_SCHEME).is(b.object(
       b.discriminant("type", "mutualTLS"),
       b.property("description", DESCRIPTION),
       b.patternProperty(EXTENSION_PATTERN, b.anything()))).skip();
-    b.rule(OAUTH2_SECURITY_SCHEME).is(b.object(
-      b.discriminant("type", "oauth2"),
-      b.property("description", DESCRIPTION),
-      b.mandatoryProperty("flows", FLOWS),
-      b.patternProperty(EXTENSION_PATTERN, b.anything()))).skip();
-    b.rule(OPENID_SECURITY_SCHEME).is(b.object(
-      b.discriminant("type", "openIdConnect"),
-      b.property("description", DESCRIPTION),
-      b.mandatoryProperty("openIdConnectUrl", b.string()),
-      b.patternProperty(EXTENSION_PATTERN, b.anything()))).skip();
-    b.rule(FLOWS).is(b.object(
-      b.property("implicit", IMPLICIT_FLOW),
-      b.property("password", PASSWORD_FLOW),
-      b.property("clientCredentials", CREDENTIALS_FLOW),
-      b.property("authorizationCode", AUTH_FLOW),
-      b.patternProperty(EXTENSION_PATTERN, b.anything())));
-    b.rule(IMPLICIT_FLOW).is(b.object(
-      b.mandatoryProperty("authorizationUrl", b.string()),
-      b.property("refreshUrl", b.string()),
-      b.property("scopes", b.object(
-        b.patternProperty(".*", b.string()))),
-      b.patternProperty(EXTENSION_PATTERN, b.anything())));
-    b.rule(PASSWORD_FLOW).is(b.object(
-      b.mandatoryProperty("tokenUrl", b.string()),
-      b.property("refreshUrl", b.string()),
-      b.property("scopes", b.object(
-        b.patternProperty(".*", b.string()))),
-      b.patternProperty(EXTENSION_PATTERN, b.anything())));
-    b.rule(CREDENTIALS_FLOW).is(b.object(
-      b.mandatoryProperty("tokenUrl", b.string()),
-      b.property("refreshUrl", b.string()),
-      b.property("scopes", b.object(
-        b.patternProperty(".*", b.string()))),
-      b.patternProperty(EXTENSION_PATTERN, b.anything())));
-    b.rule(AUTH_FLOW).is(b.object(
-      b.mandatoryProperty("authorizationUrl", b.string()),
-      b.mandatoryProperty("tokenUrl", b.string()),
-      b.property("refreshUrl", b.string()),
-      b.property("scopes", b.object(
-        b.patternProperty(".*", b.string()))),
-      b.patternProperty(EXTENSION_PATTERN, b.anything())));
-    b.rule(SECURITY_REQUIREMENT).is(b.object(
-      b.patternProperty(".*", b.array(b.string()))));
+    OpenApiGrammar.buildSecurityFlows(b,
+      FLOWS, IMPLICIT_FLOW, PASSWORD_FLOW, CREDENTIALS_FLOW, AUTH_FLOW, SECURITY_REQUIREMENT);
   }
 
   private static void buildCallbacks(YamlGrammarBuilder b) {
-    b.rule(CALLBACK).is(b.object(
-      b.patternProperty("^[^x].*", PATH),
-      b.patternProperty(EXTENSION_PATTERN, b.anything())));
-    b.rule(LINK).is(b.object(
-      b.property("operationRef", b.string()),
-      b.property("operationId", b.string()),
-      b.property("parameters", b.object(
-        b.patternProperty(".*", b.anything()))),
-      b.property("requestBody", b.anything()),
-      b.property("description", DESCRIPTION),
-      b.property("server", SERVER),
-      b.patternProperty(EXTENSION_PATTERN, b.anything())));
+    OpenApiGrammar.buildCallbacks(b, CALLBACK, LINK, PATH, SERVER, DESCRIPTION);
   }
 
   private static void buildResponses(YamlGrammarBuilder b) {
-    b.rule(RESPONSES).is(b.object(
-      b.property("default", b.firstOf(RESPONSE, REF)),
-      b.patternProperty("^[0-9xX]+", b.firstOf(RESPONSE, REF)),
-      b.patternProperty(EXTENSION_PATTERN, b.anything())));
-    b.rule(RESPONSE).is(b.object(
-      b.mandatoryProperty("description", DESCRIPTION),
-      b.property("headers", b.object(
-        b.patternProperty(".*", b.firstOf(REF, HEADER)))),
-      b.property("content", b.object(
-        b.patternProperty(".*", MEDIA_TYPE))),
-      b.property("links", b.object(
-        b.patternProperty(".*", b.firstOf(REF, LINK)))),
-      b.patternProperty(EXTENSION_PATTERN, b.anything())));
-    b.rule(HEADER).is(b.object(
-      b.property("description", DESCRIPTION),
-      b.property("required", b.bool()),
-      b.property("deprecated", b.bool()),
-      b.property("allowEmptyValue", b.bool()),
-      b.property("style", "simple"),
-      b.property("explode", b.bool()),
-      b.property("allowReserved", b.bool()),
-      b.property("schema", b.firstOf(REF, SCHEMA)),
-      b.property("example", b.anything()),
-      b.property("examples", b.object(
-        b.patternProperty(".*", b.firstOf(REF, EXAMPLE)))),
-      b.property("content", b.object(
-        b.patternProperty(".*", MEDIA_TYPE))),
-      b.patternProperty(EXTENSION_PATTERN, b.anything())));
+    OpenApiGrammar.buildResponsesAndHeader(b,
+      RESPONSES, RESPONSE, REF, HEADER, SCHEMA, EXAMPLE, MEDIA_TYPE, LINK, DESCRIPTION);
     b.rule(EXAMPLE).is(b.object(
       b.property("summary", b.string()),
       b.property("description", DESCRIPTION),
@@ -268,12 +172,7 @@ public enum OpenApi32Grammar implements GrammarRuleKey {
       b.property("content", b.object(
         b.patternProperty(".*", MEDIA_TYPE))),
       b.patternProperty(EXTENSION_PATTERN, b.anything())));
-    b.rule(REQUEST_BODY).is(b.object(
-      b.property("description", DESCRIPTION),
-      b.property("required", b.bool()),
-      b.property("content", b.object(
-        b.patternProperty(".*", b.firstOf(REF, MEDIA_TYPE)))),
-      b.patternProperty(EXTENSION_PATTERN, b.anything())));
+    OpenApiGrammar.buildRequestBody(b, REQUEST_BODY, REF, MEDIA_TYPE, DESCRIPTION);
     b.rule(MEDIA_TYPE).is(b.object(
       b.property("schema", b.firstOf(REF, SCHEMA)),
       b.property("example", b.anything()),
@@ -284,14 +183,7 @@ public enum OpenApi32Grammar implements GrammarRuleKey {
       b.property("headers", b.object(
         b.patternProperty(".*", b.firstOf(REF, HEADER)))),
       b.patternProperty(EXTENSION_PATTERN, b.anything())));
-    b.rule(ENCODING).is(b.object(
-      b.property("contentType", b.string()),
-      b.property("headers", b.object(
-        b.patternProperty(".*", b.firstOf(REF, HEADER)))),
-      b.property("style", b.firstOf("matrix", "label", "form", "simple", "spaceDelimited", "pipeDelimited", "deepObject")),
-      b.property("explode", b.bool()),
-      b.property("allowReserved", b.bool()),
-      b.patternProperty(EXTENSION_PATTERN, b.anything())));
+    OpenApiGrammar.buildEncoding(b, ENCODING, REF, HEADER);
   }
 
   private static void buildComponents(YamlGrammarBuilder b) {
@@ -309,16 +201,11 @@ public enum OpenApi32Grammar implements GrammarRuleKey {
       b.property("pathItems", PATH_ITEMS_COMPONENT),
       b.property("mediaTypes", MEDIA_TYPES_COMPONENT),
       b.patternProperty(EXTENSION_PATTERN, b.anything())));
-    b.rule(SCHEMAS_COMPONENT).is(b.object(b.patternProperty(".*", b.firstOf(REF, SCHEMA))));
+    OpenApiGrammar.buildBaseComponentRules(b,
+      SCHEMAS_COMPONENT, RESPONSES_COMPONENT, PARAMETERS_COMPONENT, EXAMPLES_COMPONENT,
+      BODIES_COMPONENT, HEADERS_COMPONENT, SECURITY_SCHEMES, LINKS_COMPONENT, CALLBACKS_COMPONENT,
+      REF, SCHEMA, RESPONSE, PARAMETER, EXAMPLE, REQUEST_BODY, HEADER, SECURITY_SCHEME, LINK, CALLBACK);
     b.rule(WEBHOOKS_COMPONENT).is(b.object(b.patternProperty(".*", b.firstOf(REF, WEBHOOK))));
-    b.rule(RESPONSES_COMPONENT).is(b.object(b.patternProperty(".*", b.firstOf(REF, RESPONSE))));
-    b.rule(PARAMETERS_COMPONENT).is(b.object(b.patternProperty(".*", b.firstOf(REF, PARAMETER))));
-    b.rule(EXAMPLES_COMPONENT).is(b.object(b.patternProperty(".*", b.firstOf(REF, EXAMPLE))));
-    b.rule(BODIES_COMPONENT).is(b.object(b.patternProperty(".*", b.firstOf(REF, REQUEST_BODY))));
-    b.rule(HEADERS_COMPONENT).is(b.object(b.patternProperty(".*", b.firstOf(REF, HEADER))));
-    b.rule(SECURITY_SCHEMES).is(b.object(b.patternProperty(".*", b.firstOf(REF, SECURITY_SCHEME))));
-    b.rule(LINKS_COMPONENT).is(b.object(b.patternProperty(".*", b.firstOf(REF, LINK))));
-    b.rule(CALLBACKS_COMPONENT).is(b.object(b.patternProperty(".*", b.firstOf(REF, CALLBACK))));
     b.rule(PATH_ITEMS_COMPONENT).is(b.object(b.patternProperty(".*", b.firstOf(REF, PATH))));
     b.rule(MEDIA_TYPES_COMPONENT).is(b.object(b.patternProperty(".*", b.firstOf(REF, MEDIA_TYPE))));
 
@@ -425,21 +312,8 @@ public enum OpenApi32Grammar implements GrammarRuleKey {
       b.property("servers", b.array(SERVER)),
       b.property("parameters", b.array(b.firstOf(REF, PARAMETER))),
       b.patternProperty(EXTENSION_PATTERN, b.anything())));
-    b.rule(OPERATION_WEBHOOKS).is(b.object(
-      b.property("tags", b.array(b.string())),
-      b.property("summary", b.string()),
-      b.property("description", DESCRIPTION),
-      b.property("externalDocs", EXTERNAL_DOC),
-      b.property("operationId", b.string()),
-      b.property("parameters", b.array(b.firstOf(REF, PARAMETER))),
-      b.property("requestBody", b.firstOf(REF, REQUEST_BODY)),
-      b.mandatoryProperty("responses", RESPONSES),
-      b.property("callbacks", b.object(
-        b.patternProperty(".*", b.firstOf(REF, CALLBACK)))),
-      b.property("deprecated", b.bool()),
-      b.property("security", b.array(SECURITY_REQUIREMENT)),
-      b.property("servers", b.array(SERVER)),
-      b.patternProperty(EXTENSION_PATTERN, b.anything())));
+    OpenApiGrammar.buildOperation(b, OPERATION_WEBHOOKS, REF, PARAMETER, REQUEST_BODY, RESPONSES,
+      CALLBACK, EXTERNAL_DOC, SECURITY_REQUIREMENT, SERVER, DESCRIPTION);
   }
 
   private static void buildPaths(YamlGrammarBuilder b) {
@@ -463,21 +337,8 @@ public enum OpenApi32Grammar implements GrammarRuleKey {
       b.property("servers", b.array(SERVER)),
       b.property("parameters", b.array(b.firstOf(REF, PARAMETER))),
       b.patternProperty(EXTENSION_PATTERN, b.anything())));
-    b.rule(OPERATION).is(b.object(
-      b.property("tags", b.array(b.string())),
-      b.property("summary", b.string()),
-      b.property("description", DESCRIPTION),
-      b.property("externalDocs", EXTERNAL_DOC),
-      b.property("operationId", b.string()),
-      b.property("parameters", b.array(b.firstOf(REF, PARAMETER))),
-      b.property("requestBody", b.firstOf(REF, REQUEST_BODY)),
-      b.mandatoryProperty("responses", RESPONSES),
-      b.property("callbacks", b.object(
-        b.patternProperty(".*", b.firstOf(REF, CALLBACK)))),
-      b.property("deprecated", b.bool()),
-      b.property("security", b.array(SECURITY_REQUIREMENT)),
-      b.property("servers", b.array(SERVER)),
-      b.patternProperty(EXTENSION_PATTERN, b.anything())));
+    OpenApiGrammar.buildOperation(b, OPERATION, REF, PARAMETER, REQUEST_BODY, RESPONSES,
+      CALLBACK, EXTERNAL_DOC, SECURITY_REQUIREMENT, SERVER, DESCRIPTION);
   }
 
   private static void buildServer(YamlGrammarBuilder b) {

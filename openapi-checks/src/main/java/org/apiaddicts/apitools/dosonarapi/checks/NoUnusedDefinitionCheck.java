@@ -167,7 +167,11 @@ public class NoUnusedDefinitionCheck extends OpenApiCheck {
 
   private static List<JsonPointer> getReference(JsonNode node) {
     if (node.isRef()) {
-      return Collections.singletonList(JsonPointer.compile(node.at("/$ref").getTokenValue().substring(1)));
+      String refValue = node.at("/$ref").getTokenValue();
+      if (!refValue.startsWith("#")) {
+        return Collections.emptyList();
+      }
+      return Collections.singletonList(JsonPointer.compile(refValue.substring(1)));
     } else {
       return Collections.emptyList();
     }
