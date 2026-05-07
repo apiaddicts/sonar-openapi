@@ -26,6 +26,23 @@ public final class OpenApiGrammar {
 
   static final String EXTENSION_PATTERN = "^x-.*";
 
+  private static final String PROP_DESCRIPTION = "description";
+  private static final String PROP_SUMMARY = "summary";
+  private static final String PROP_REQUIRED = "required";
+  private static final String PROP_DEPRECATED = "deprecated";
+  private static final String PROP_PARAMETERS = "parameters";
+  private static final String PROP_CONTENT = "content";
+  private static final String PROP_SCHEMA = "schema";
+  private static final String PROP_EXAMPLE = "example";
+  private static final String PROP_EXAMPLES = "examples";
+  private static final String PROP_STYLE = "style";
+  private static final String STYLE_SIMPLE = "simple";
+  private static final String PROP_EXPLODE = "explode";
+  private static final String PROP_ALLOW_RESERVED = "allowReserved";
+  private static final String PROP_REFRESH_URL = "refreshUrl";
+  private static final String PROP_SCOPES = "scopes";
+  private static final String PROP_TOKEN_URL = "tokenUrl";
+
   private OpenApiGrammar() {}
 
   public static void buildCommonSecuritySchemes(YamlGrammarBuilder b,
@@ -34,24 +51,24 @@ public final class OpenApiGrammar {
       GrammarRuleKey flows, GrammarRuleKey description) {
     b.rule(httpScheme).is(b.object(
       b.discriminant("type", "http"),
-      b.property("description", description),
+      b.property(PROP_DESCRIPTION, description),
       b.mandatoryProperty("scheme", b.string()),
       b.property("bearerFormat", b.string()),
       b.patternProperty(EXTENSION_PATTERN, b.anything()))).skip();
     b.rule(apiKeyScheme).is(b.object(
       b.discriminant("type", "apiKey"),
-      b.property("description", description),
+      b.property(PROP_DESCRIPTION, description),
       b.mandatoryProperty("name", b.string()),
       b.mandatoryProperty("in", b.firstOf("query", "header", "cookie")),
       b.patternProperty(EXTENSION_PATTERN, b.anything()))).skip();
     b.rule(oauth2Scheme).is(b.object(
       b.discriminant("type", "oauth2"),
-      b.property("description", description),
+      b.property(PROP_DESCRIPTION, description),
       b.mandatoryProperty("flows", flows),
       b.patternProperty(EXTENSION_PATTERN, b.anything()))).skip();
     b.rule(openIdScheme).is(b.object(
       b.discriminant("type", "openIdConnect"),
-      b.property("description", description),
+      b.property(PROP_DESCRIPTION, description),
       b.mandatoryProperty("openIdConnectUrl", b.string()),
       b.patternProperty(EXTENSION_PATTERN, b.anything()))).skip();
   }
@@ -67,24 +84,24 @@ public final class OpenApiGrammar {
       b.patternProperty(EXTENSION_PATTERN, b.anything())));
     b.rule(implicitFlow).is(b.object(
       b.mandatoryProperty("authorizationUrl", b.string()),
-      b.property("refreshUrl", b.string()),
-      b.property("scopes", b.object(b.patternProperty(".*", b.string()))),
+      b.property(PROP_REFRESH_URL, b.string()),
+      b.property(PROP_SCOPES, b.object(b.patternProperty(".*", b.string()))),
       b.patternProperty(EXTENSION_PATTERN, b.anything())));
     b.rule(passwordFlow).is(b.object(
-      b.mandatoryProperty("tokenUrl", b.string()),
-      b.property("refreshUrl", b.string()),
-      b.property("scopes", b.object(b.patternProperty(".*", b.string()))),
+      b.mandatoryProperty(PROP_TOKEN_URL, b.string()),
+      b.property(PROP_REFRESH_URL, b.string()),
+      b.property(PROP_SCOPES, b.object(b.patternProperty(".*", b.string()))),
       b.patternProperty(EXTENSION_PATTERN, b.anything())));
     b.rule(credentialsFlow).is(b.object(
-      b.mandatoryProperty("tokenUrl", b.string()),
-      b.property("refreshUrl", b.string()),
-      b.property("scopes", b.object(b.patternProperty(".*", b.string()))),
+      b.mandatoryProperty(PROP_TOKEN_URL, b.string()),
+      b.property(PROP_REFRESH_URL, b.string()),
+      b.property(PROP_SCOPES, b.object(b.patternProperty(".*", b.string()))),
       b.patternProperty(EXTENSION_PATTERN, b.anything())));
     b.rule(authFlow).is(b.object(
       b.mandatoryProperty("authorizationUrl", b.string()),
-      b.mandatoryProperty("tokenUrl", b.string()),
-      b.property("refreshUrl", b.string()),
-      b.property("scopes", b.object(b.patternProperty(".*", b.string()))),
+      b.mandatoryProperty(PROP_TOKEN_URL, b.string()),
+      b.property(PROP_REFRESH_URL, b.string()),
+      b.property(PROP_SCOPES, b.object(b.patternProperty(".*", b.string()))),
       b.patternProperty(EXTENSION_PATTERN, b.anything())));
     b.rule(securityRequirement).is(b.object(
       b.patternProperty(".*", b.array(b.string()))));
@@ -99,13 +116,14 @@ public final class OpenApiGrammar {
     b.rule(link).is(b.object(
       b.property("operationRef", b.string()),
       b.property("operationId", b.string()),
-      b.property("parameters", b.object(b.patternProperty(".*", b.anything()))),
+      b.property(PROP_PARAMETERS, b.object(b.patternProperty(".*", b.anything()))),
       b.property("requestBody", b.anything()),
-      b.property("description", description),
+      b.property(PROP_DESCRIPTION, description),
       b.property("server", server),
       b.patternProperty(EXTENSION_PATTERN, b.anything())));
   }
 
+  @SuppressWarnings("java:S107")
   public static void buildResponsesAndHeader(YamlGrammarBuilder b,
       GrammarRuleKey responses, GrammarRuleKey response, GrammarRuleKey ref,
       GrammarRuleKey header, GrammarRuleKey schema, GrammarRuleKey example,
@@ -115,26 +133,33 @@ public final class OpenApiGrammar {
       b.patternProperty("^[0-9xX]+", b.firstOf(response, ref)),
       b.patternProperty(EXTENSION_PATTERN, b.anything())));
     b.rule(response).is(b.object(
-      b.mandatoryProperty("description", description),
+      b.mandatoryProperty(PROP_DESCRIPTION, description),
       b.property("headers", b.object(b.patternProperty(".*", b.firstOf(ref, header)))),
-      b.property("content", b.object(b.patternProperty(".*", mediaType))),
+      b.property(PROP_CONTENT, b.object(b.patternProperty(".*", mediaType))),
       b.property("links", b.object(b.patternProperty(".*", b.firstOf(ref, link)))),
       b.patternProperty(EXTENSION_PATTERN, b.anything())));
+    buildHeader(b, header, ref, schema, example, mediaType, description);
+  }
+
+  public static void buildHeader(YamlGrammarBuilder b,
+      GrammarRuleKey header, GrammarRuleKey ref, GrammarRuleKey schema,
+      GrammarRuleKey example, GrammarRuleKey mediaType, GrammarRuleKey description) {
     b.rule(header).is(b.object(
-      b.property("description", description),
-      b.property("required", b.bool()),
-      b.property("deprecated", b.bool()),
+      b.property(PROP_DESCRIPTION, description),
+      b.property(PROP_REQUIRED, b.bool()),
+      b.property(PROP_DEPRECATED, b.bool()),
       b.property("allowEmptyValue", b.bool()),
-      b.property("style", "simple"),
-      b.property("explode", b.bool()),
-      b.property("allowReserved", b.bool()),
-      b.property("schema", b.firstOf(ref, schema)),
-      b.property("example", b.anything()),
-      b.property("examples", b.object(b.patternProperty(".*", b.firstOf(ref, example)))),
-      b.property("content", b.object(b.patternProperty(".*", mediaType))),
+      b.property(PROP_STYLE, STYLE_SIMPLE),
+      b.property(PROP_EXPLODE, b.bool()),
+      b.property(PROP_ALLOW_RESERVED, b.bool()),
+      b.property(PROP_SCHEMA, b.firstOf(ref, schema)),
+      b.property(PROP_EXAMPLE, b.anything()),
+      b.property(PROP_EXAMPLES, b.object(b.patternProperty(".*", b.firstOf(ref, example)))),
+      b.property(PROP_CONTENT, b.object(b.patternProperty(".*", mediaType))),
       b.patternProperty(EXTENSION_PATTERN, b.anything())));
   }
 
+  @SuppressWarnings("java:S107")
   public static void buildBaseComponentRules(YamlGrammarBuilder b,
       GrammarRuleKey schemasComponent, GrammarRuleKey responsesComponent,
       GrammarRuleKey parametersComponent, GrammarRuleKey examplesComponent,
@@ -156,6 +181,7 @@ public final class OpenApiGrammar {
     b.rule(callbacksComponent).is(b.object(b.patternProperty(".*", b.firstOf(ref, callback))));
   }
 
+  @SuppressWarnings("java:S107")
   public static void buildOperation(YamlGrammarBuilder b,
       GrammarRuleKey operation, GrammarRuleKey ref, GrammarRuleKey parameter,
       GrammarRuleKey requestBody, GrammarRuleKey responses,
@@ -164,16 +190,16 @@ public final class OpenApiGrammar {
       GrammarRuleKey description) {
     b.rule(operation).is(b.object(
       b.property("tags", b.array(b.string())),
-      b.property("summary", b.string()),
-      b.property("description", description),
+      b.property(PROP_SUMMARY, b.string()),
+      b.property(PROP_DESCRIPTION, description),
       b.property("externalDocs", externalDoc),
       b.property("operationId", b.string()),
-      b.property("parameters", b.array(b.firstOf(ref, parameter))),
+      b.property(PROP_PARAMETERS, b.array(b.firstOf(ref, parameter))),
       b.property("requestBody", b.firstOf(ref, requestBody)),
       b.mandatoryProperty("responses", responses),
       b.property("callbacks", b.object(
         b.patternProperty(".*", b.firstOf(ref, callback)))),
-      b.property("deprecated", b.bool()),
+      b.property(PROP_DEPRECATED, b.bool()),
       b.property("security", b.array(securityRequirement)),
       b.property("servers", b.array(server)),
       b.patternProperty(EXTENSION_PATTERN, b.anything())));
@@ -185,18 +211,18 @@ public final class OpenApiGrammar {
     b.rule(parameter).is(b.object(
       b.mandatoryProperty("name", b.string()),
       b.mandatoryProperty("in", b.firstOf("path", "query", "header", "cookie")),
-      b.property("description", description),
-      b.property("required", b.bool()),
-      b.property("deprecated", b.bool()),
+      b.property(PROP_DESCRIPTION, description),
+      b.property(PROP_REQUIRED, b.bool()),
+      b.property(PROP_DEPRECATED, b.bool()),
       b.property("allowEmptyValue", b.bool()),
-      b.property("style", b.firstOf("matrix", "label", "form", "simple", "spaceDelimited", "pipeDelimited", "deepObject")),
-      b.property("explode", b.bool()),
-      b.property("allowReserved", b.bool()),
-      b.property("schema", b.firstOf(ref, schema)),
-      b.property("example", b.anything()),
-      b.property("examples", b.object(
+      b.property(PROP_STYLE, b.firstOf("matrix", "label", "form", STYLE_SIMPLE, "spaceDelimited", "pipeDelimited", "deepObject")),
+      b.property(PROP_EXPLODE, b.bool()),
+      b.property(PROP_ALLOW_RESERVED, b.bool()),
+      b.property(PROP_SCHEMA, b.firstOf(ref, schema)),
+      b.property(PROP_EXAMPLE, b.anything()),
+      b.property(PROP_EXAMPLES, b.object(
         b.patternProperty(".*", b.firstOf(ref, example)))),
-      b.property("content", b.object(
+      b.property(PROP_CONTENT, b.object(
         b.patternProperty(".*", mediaType))),
       b.patternProperty(EXTENSION_PATTERN, b.anything())));
   }
@@ -205,9 +231,9 @@ public final class OpenApiGrammar {
       GrammarRuleKey requestBody, GrammarRuleKey ref, GrammarRuleKey mediaType,
       GrammarRuleKey description) {
     b.rule(requestBody).is(b.object(
-      b.property("description", description),
-      b.property("required", b.bool()),
-      b.property("content", b.object(
+      b.property(PROP_DESCRIPTION, description),
+      b.property(PROP_REQUIRED, b.bool()),
+      b.property(PROP_CONTENT, b.object(
         b.patternProperty(".*", b.firstOf(ref, mediaType)))),
       b.patternProperty(EXTENSION_PATTERN, b.anything())));
   }
@@ -216,9 +242,9 @@ public final class OpenApiGrammar {
       GrammarRuleKey mediaType, GrammarRuleKey ref, GrammarRuleKey schema,
       GrammarRuleKey example, GrammarRuleKey encoding) {
     b.rule(mediaType).is(b.object(
-      b.property("schema", b.firstOf(ref, schema)),
-      b.property("example", b.anything()),
-      b.property("examples", b.object(
+      b.property(PROP_SCHEMA, b.firstOf(ref, schema)),
+      b.property(PROP_EXAMPLE, b.anything()),
+      b.property(PROP_EXAMPLES, b.object(
         b.patternProperty(".*", b.firstOf(ref, example)))),
       b.property("encoding", b.object(
         b.patternProperty(".*", encoding))),
@@ -231,9 +257,9 @@ public final class OpenApiGrammar {
       b.property("contentType", b.string()),
       b.property("headers", b.object(
         b.patternProperty(".*", b.firstOf(ref, header)))),
-      b.property("style", b.firstOf("matrix", "label", "form", "simple", "spaceDelimited", "pipeDelimited", "deepObject")),
-      b.property("explode", b.bool()),
-      b.property("allowReserved", b.bool()),
+      b.property(PROP_STYLE, b.firstOf("matrix", "label", "form", STYLE_SIMPLE, "spaceDelimited", "pipeDelimited", "deepObject")),
+      b.property(PROP_EXPLODE, b.bool()),
+      b.property(PROP_ALLOW_RESERVED, b.bool()),
       b.patternProperty(EXTENSION_PATTERN, b.anything())));
   }
 
@@ -242,8 +268,8 @@ public final class OpenApiGrammar {
       GrammarRuleKey parameter, GrammarRuleKey server, GrammarRuleKey description) {
     b.rule(path).is(b.object(
       b.property("$ref", b.string()),
-      b.property("summary", b.string()),
-      b.property("description", description),
+      b.property(PROP_SUMMARY, b.string()),
+      b.property(PROP_DESCRIPTION, description),
       b.property("get", operation),
       b.property("put", operation),
       b.property("post", operation),
@@ -253,7 +279,7 @@ public final class OpenApiGrammar {
       b.property("patch", operation),
       b.property("trace", operation),
       b.property("servers", b.array(server)),
-      b.property("parameters", b.array(b.firstOf(ref, parameter))),
+      b.property(PROP_PARAMETERS, b.array(b.firstOf(ref, parameter))),
       b.patternProperty(EXTENSION_PATTERN, b.anything())));
   }
 
@@ -261,14 +287,14 @@ public final class OpenApiGrammar {
       GrammarRuleKey server, GrammarRuleKey serverVariable, GrammarRuleKey description) {
     b.rule(server).is(b.object(
       b.mandatoryProperty("url", b.string()),
-      b.property("description", description),
+      b.property(PROP_DESCRIPTION, description),
       b.property("variables", b.object(
         b.patternProperty(".*", serverVariable))),
       b.patternProperty(EXTENSION_PATTERN, b.anything())));
     b.rule(serverVariable).is(b.object(
       b.property("enum", b.array(b.string())),
       b.mandatoryProperty("default", b.string()),
-      b.property("description", description),
+      b.property(PROP_DESCRIPTION, description),
       b.patternProperty(EXTENSION_PATTERN, b.anything())));
   }
 
@@ -276,11 +302,12 @@ public final class OpenApiGrammar {
       GrammarRuleKey tag, GrammarRuleKey description, GrammarRuleKey externalDoc) {
     b.rule(tag).is(b.object(
       b.mandatoryProperty("name", b.string()),
-      b.property("description", description),
+      b.property(PROP_DESCRIPTION, description),
       b.property("externalDocs", externalDoc),
       b.patternProperty(EXTENSION_PATTERN, b.anything())));
   }
 
+  @SuppressWarnings("java:S107")
   public static void buildMutualTlsSecuritySetup(YamlGrammarBuilder b,
       GrammarRuleKey securityScheme, GrammarRuleKey httpScheme, GrammarRuleKey apiKeyScheme,
       GrammarRuleKey oauth2Scheme, GrammarRuleKey openIdScheme, GrammarRuleKey mutualTlsScheme,
@@ -293,13 +320,14 @@ public final class OpenApiGrammar {
   public static void buildStandardExample(YamlGrammarBuilder b,
       GrammarRuleKey example, GrammarRuleKey description) {
     b.rule(example).is(b.object(
-      b.property("summary", b.string()),
-      b.property("description", description),
+      b.property(PROP_SUMMARY, b.string()),
+      b.property(PROP_DESCRIPTION, description),
       b.property("value", b.anything()),
       b.property("externalValue", b.string()),
       b.patternProperty(EXTENSION_PATTERN, b.anything())));
   }
 
+  @SuppressWarnings("java:S107")
   public static void buildStandardParameters(YamlGrammarBuilder b,
       GrammarRuleKey parameter, GrammarRuleKey requestBody, GrammarRuleKey mediaType,
       GrammarRuleKey encoding, GrammarRuleKey ref, GrammarRuleKey schema,

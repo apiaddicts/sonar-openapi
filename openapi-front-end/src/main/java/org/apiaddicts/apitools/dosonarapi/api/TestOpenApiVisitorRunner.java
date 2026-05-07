@@ -66,6 +66,7 @@ public class TestOpenApiVisitorRunner {
     return createContext(file, isV2, isV3, isV31, false);
   }
 
+  @SuppressWarnings("java:S1172")
   public static OpenApiVisitorContext createContext(File file, boolean isV2, boolean isV3, boolean isV31, boolean isV32) {
     OpenApiConfiguration configuration = new OpenApiConfiguration(StandardCharsets.UTF_8, true);
     YamlParser parser;
