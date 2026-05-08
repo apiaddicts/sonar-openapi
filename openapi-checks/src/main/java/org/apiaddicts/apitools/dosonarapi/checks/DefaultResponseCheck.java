@@ -26,6 +26,8 @@ import org.sonar.check.Rule;
 import org.apiaddicts.apitools.dosonarapi.api.OpenApiCheck;
 import org.apiaddicts.apitools.dosonarapi.api.v2.OpenApi2Grammar;
 import org.apiaddicts.apitools.dosonarapi.api.v3.OpenApi3Grammar;
+import org.apiaddicts.apitools.dosonarapi.api.v31.OpenApi31Grammar;
+import org.apiaddicts.apitools.dosonarapi.api.v32.OpenApi32Grammar;
 import org.apiaddicts.apitools.dosonarapi.sslr.yaml.grammar.impl.MissingNode;
 import org.apiaddicts.apitools.dosonarapi.sslr.yaml.grammar.JsonNode;
 
@@ -36,7 +38,7 @@ public class DefaultResponseCheck extends OpenApiCheck {
 
     @Override
     public Set<AstNodeType> subscribedKinds() {
-        return Sets.newHashSet(OpenApi2Grammar.RESPONSES, OpenApi3Grammar.RESPONSES);
+        return Sets.newHashSet(OpenApi2Grammar.RESPONSES, OpenApi3Grammar.RESPONSES, OpenApi31Grammar.RESPONSES, OpenApi32Grammar.RESPONSES);
     }
 
     @Override

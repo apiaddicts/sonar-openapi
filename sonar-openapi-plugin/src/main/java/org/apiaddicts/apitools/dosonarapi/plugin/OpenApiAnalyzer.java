@@ -109,6 +109,20 @@ public class OpenApiAnalyzer {
     }
   }
 
+  private static boolean isV3Version(JsonNode openapiNode) {
+    if (openapiNode.isMissing()) return false;
+    String v = openapiNode.getTokenValue();
+    return "3.0.0".equals(v) || "3.0.1".equals(v) || "3.0.2".equals(v) || "3.0.3".equals(v);
+  }
+
+  private YamlParser selectParser(boolean isV2, boolean isV3, boolean isV31, boolean isV32) {
+    if (isV2) return OpenApiParser.createV2(configuration);
+    if (isV32) return OpenApiParser.createV32(configuration);
+    if (isV31) return OpenApiParser.createV31(configuration);
+    if (isV3) return OpenApiParser.createV3(configuration);
+    return null;
+  }
+
   private void scanFile(InputFile inputFile) {
     OpenApiFile openApiFile = SonarQubeOpenApiFile.create(inputFile);
     OpenApiVisitorContext visitorContext;
@@ -118,19 +132,10 @@ public class OpenApiAnalyzer {
       JsonNode rootNode = OpenApiParser.createGeneric(configuration).parse(content);
       boolean isV2 = !rootNode.at("/swagger").isMissing();
       JsonNode openapiNode = rootNode.at("/openapi");
-      boolean isV3 = !openapiNode.isMissing() && (
-          openapiNode.getTokenValue().equals("3.0.0") ||
-          openapiNode.getTokenValue().equals("3.0.1") ||
-          openapiNode.getTokenValue().equals("3.0.2") ||
-          openapiNode.getTokenValue().equals("3.0.3")
-      );
-      
-      // Verificar si el nodo "/openapi" está presente y su valor es 3.1.0 para isV31
+      boolean isV3 = isV3Version(openapiNode);
       boolean isV31 = !openapiNode.isMissing() && openapiNode.getTokenValue().equals("3.1.0");
-      YamlParser targetParser = null;
-      if (isV2) targetParser = OpenApiParser.createV2(configuration);
-      if (isV3) targetParser = OpenApiParser.createV3(configuration);
-      if (isV31) targetParser = OpenApiParser.createV31(configuration);
+      boolean isV32 = !openapiNode.isMissing() && openapiNode.getTokenValue().equals("3.2.0");
+      YamlParser targetParser = selectParser(isV2, isV3, isV31, isV32);
       if (targetParser == null) return;
 
       visitorContext = new OpenApiVisitorContext(targetParser.parse(content), targetParser.getIssues(), openApiFile);

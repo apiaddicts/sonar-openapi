@@ -29,6 +29,8 @@ import org.sonar.check.Rule;
 import org.apiaddicts.apitools.dosonarapi.api.OpenApiCheck;
 import org.apiaddicts.apitools.dosonarapi.api.v2.OpenApi2Grammar;
 import org.apiaddicts.apitools.dosonarapi.api.v3.OpenApi3Grammar;
+import org.apiaddicts.apitools.dosonarapi.api.v31.OpenApi31Grammar;
+import org.apiaddicts.apitools.dosonarapi.api.v32.OpenApi32Grammar;
 import org.apiaddicts.apitools.dosonarapi.sslr.yaml.grammar.JsonNode;
 
 @Rule(key = DefinedResponseCheck.CHECK_KEY)
@@ -40,7 +42,7 @@ public class DefinedResponseCheck extends OpenApiCheck {
   @Override
   public Set<AstNodeType> subscribedKinds() {
     return Sets.newHashSet(
-      OpenApi2Grammar.RESPONSES, OpenApi3Grammar.RESPONSES);
+      OpenApi2Grammar.RESPONSES, OpenApi3Grammar.RESPONSES, OpenApi31Grammar.RESPONSES, OpenApi32Grammar.RESPONSES);
   }
 
   @Override

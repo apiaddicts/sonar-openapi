@@ -1,0 +1,10 @@
+url: "https://api.example.com/v1"
+name: production
+description: Production server
+variables:
+  port:
+    default: "443"
+    enum:
+      - "443"
+      - "8443"
+    description: Server port

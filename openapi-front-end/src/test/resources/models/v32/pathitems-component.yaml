@@ -1,0 +1,6 @@
+PetItem:
+  get:
+    summary: Get a pet
+    responses:
+      '200':
+        description: A pet

@@ -22,6 +22,7 @@ package org.apiaddicts.apitools.dosonarapi.openapi.parser;
 import org.apiaddicts.apitools.dosonarapi.api.v2.OpenApi2Grammar;
 import org.apiaddicts.apitools.dosonarapi.api.v3.OpenApi3Grammar;
 import org.apiaddicts.apitools.dosonarapi.api.v31.OpenApi31Grammar;
+import org.apiaddicts.apitools.dosonarapi.api.v32.OpenApi32Grammar;
 import org.apiaddicts.apitools.dosonarapi.openapi.OpenApiConfiguration;
 import org.apiaddicts.apitools.dosonarapi.sslr.yaml.grammar.YamlParser;
 
@@ -40,6 +41,10 @@ public class OpenApiParser {
 
   public static YamlParser createV31(OpenApiConfiguration configuration) {
     return YamlParser.builder().withCharset(configuration.getCharset()).withGrammar(OpenApi31Grammar.create()).withStrictValidation(configuration.isStrict()).build();
+  }
+
+  public static YamlParser createV32(OpenApiConfiguration configuration) {
+    return YamlParser.builder().withCharset(configuration.getCharset()).withGrammar(OpenApi32Grammar.create()).withStrictValidation(configuration.isStrict()).build();
   }
 
   public static YamlParser createGeneric(OpenApiConfiguration configuration) {

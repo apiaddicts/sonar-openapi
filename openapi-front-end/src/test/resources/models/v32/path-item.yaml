@@ -1,0 +1,11 @@
+get:
+  summary: List all pets
+  operationId: listPets
+  responses:
+    '200':
+      description: A list of pets
+query:
+  summary: Search pets via QUERY method
+  responses:
+    '200':
+      description: Matching pets

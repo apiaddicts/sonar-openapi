@@ -1,0 +1,29 @@
+openapi: "3.2.0"
+info:
+  title: Simple API
+  version: "1.0.0"
+paths:
+  /pets:
+    get:
+      summary: List all pets
+      operationId: listPets
+      responses:
+        '200':
+          description: A list of pets
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+    query:
+      summary: Search pets via QUERY method
+      operationId: searchPets
+      responses:
+        '200':
+          description: Matching pets
