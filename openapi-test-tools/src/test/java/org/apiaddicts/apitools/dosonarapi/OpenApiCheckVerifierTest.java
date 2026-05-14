@@ -121,8 +121,8 @@ public class OpenApiCheckVerifierTest {
   @Test
   public void throws_on_invalid_param_without_equals() {
     OpenApiCheckVerifier verifier = new OpenApiCheckVerifier();
-    assertThatThrownBy(() -> verifier.collectExpectedIssue(
-        makeComment("Noncompliant [[invalidparam]]", COMMENT_LINE, COMMENT_COLUMN)))
+    Trivia invalidParam = makeComment("Noncompliant [[invalidparam]]", COMMENT_LINE, COMMENT_COLUMN);
+    assertThatThrownBy(() -> verifier.collectExpectedIssue(invalidParam))
       .isInstanceOf(IllegalStateException.class)
       .hasMessageContaining("Invalid param");
   }
@@ -130,8 +130,8 @@ public class OpenApiCheckVerifierTest {
   @Test
   public void throws_on_unknown_param_name() {
     OpenApiCheckVerifier verifier = new OpenApiCheckVerifier();
-    assertThatThrownBy(() -> verifier.collectExpectedIssue(
-        makeComment("Noncompliant [[unknownParam=5]]", COMMENT_LINE, COMMENT_COLUMN)))
+    Trivia unknownParam = makeComment("Noncompliant [[unknownParam=5]]", COMMENT_LINE, COMMENT_COLUMN);
+    assertThatThrownBy(() -> verifier.collectExpectedIssue(unknownParam))
       .isInstanceOf(IllegalStateException.class)
       .hasMessageContaining("Invalid param");
   }
@@ -139,7 +139,8 @@ public class OpenApiCheckVerifierTest {
   @Test
   public void precise_location_throws_when_no_preceding_issue() {
     OpenApiCheckVerifier verifier = new OpenApiCheckVerifier();
-    assertThatThrownBy(() -> verifier.collectExpectedIssue(makeComment("^^^", COMMENT_LINE, 0)))
+    Trivia preciseLocation = makeComment("^^^", COMMENT_LINE, 0);
+    assertThatThrownBy(() -> verifier.collectExpectedIssue(preciseLocation))
       .isInstanceOf(IllegalStateException.class)
       .hasMessageContaining("Invalid test file");
   }
@@ -148,7 +149,8 @@ public class OpenApiCheckVerifierTest {
   public void precise_location_throws_when_not_on_next_line() {
     OpenApiCheckVerifier verifier = new OpenApiCheckVerifier();
     verifier.collectExpectedIssue(makeComment("Noncompliant", COMMENT_LINE, COMMENT_COLUMN));
-    assertThatThrownBy(() -> verifier.collectExpectedIssue(makeComment("^^^", COMMENT_LINE + 3, 0)))
+    Trivia notNextLine = makeComment("^^^", COMMENT_LINE + 3, 0);
+    assertThatThrownBy(() -> verifier.collectExpectedIssue(notNextLine))
       .isInstanceOf(IllegalStateException.class)
       .hasMessageContaining("Invalid test file");
   }
@@ -157,7 +159,8 @@ public class OpenApiCheckVerifierTest {
   public void precise_location_throws_when_column_not_zero() {
     OpenApiCheckVerifier verifier = new OpenApiCheckVerifier();
     verifier.collectExpectedIssue(makeComment("Noncompliant", COMMENT_LINE, COMMENT_COLUMN));
-    assertThatThrownBy(() -> verifier.collectExpectedIssue(makeComment("^^^", COMMENT_LINE + 1, 2)))
+    Trivia wrongColumn = makeComment("^^^", COMMENT_LINE + 1, 2);
+    assertThatThrownBy(() -> verifier.collectExpectedIssue(wrongColumn))
       .isInstanceOf(IllegalStateException.class)
       .hasMessageContaining("column 1");
   }
@@ -174,16 +177,18 @@ public class OpenApiCheckVerifierTest {
 
   @Test
   public void verify_fails_when_expected_issue_not_reported() {
+    TestNoOpCheck noOpCheck = new TestNoOpCheck();
     assertThatThrownBy(() ->
-      OpenApiCheckVerifier.verify("src/test/resources/test-verify-noncompliant.yaml", new TestNoOpCheck(), true, false, false))
+      OpenApiCheckVerifier.verify("src/test/resources/test-verify-noncompliant.yaml", noOpCheck, true, false, false))
       .isInstanceOf(AssertionError.class)
       .hasMessageContaining("Missing issue");
   }
 
   @Test
   public void verify_fails_when_unexpected_issue_reported() {
+    TestPathsReportCheck pathsCheck = new TestPathsReportCheck();
     assertThatThrownBy(() ->
-      OpenApiCheckVerifier.verify("src/test/resources/test-verify.yaml", new TestPathsReportCheck(), true, false, false))
+      OpenApiCheckVerifier.verify("src/test/resources/test-verify.yaml", pathsCheck, true, false, false))
       .isInstanceOf(AssertionError.class)
       .hasMessageContaining("Unexpected issue");
   }

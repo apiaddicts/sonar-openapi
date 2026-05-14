@@ -23,6 +23,7 @@ import java.io.File;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 
 public class TestOpenApiVisitorRunnerTest {
 
@@ -67,16 +68,19 @@ public class TestOpenApiVisitorRunnerTest {
 
   @Test
   public void scan_file_for_comments_with_three_flags() {
-    TestOpenApiVisitorRunner.scanFileForComments(V3_FILE, false, false, false);
+    assertThatCode(() -> TestOpenApiVisitorRunner.scanFileForComments(V3_FILE, false, false, false))
+        .doesNotThrowAnyException();
   }
 
   @Test
   public void scan_file_for_comments_with_v32_flag() {
-    TestOpenApiVisitorRunner.scanFileForComments(V32_FILE, false, false, false, true);
+    assertThatCode(() -> TestOpenApiVisitorRunner.scanFileForComments(V32_FILE, false, false, false, true))
+        .doesNotThrowAnyException();
   }
 
   @Test
   public void scan_file_with_visitors() {
-    TestOpenApiVisitorRunner.scanFile(V3_FILE, new OpenApiVisitor());
+    assertThatCode(() -> TestOpenApiVisitorRunner.scanFile(V3_FILE, new OpenApiVisitor()))
+        .doesNotThrowAnyException();
   }
 }

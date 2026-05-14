@@ -60,10 +60,10 @@ public class FileMetricsTest {
     OpenApiVisitorContext context = new OpenApiVisitorContext(file, new RecognitionException(0, "parse error"));
     FileMetrics fileMetrics = new FileMetrics(context);
 
-    assertThat(fileMetrics.numberOfOperations()).isEqualTo(0);
-    assertThat(fileMetrics.numberOfPaths()).isEqualTo(0);
-    assertThat(fileMetrics.numberOfSchemas()).isEqualTo(0);
-    assertThat(fileMetrics.complexity()).isEqualTo(0);
+    assertThat(fileMetrics.numberOfOperations()).isZero();
+    assertThat(fileMetrics.numberOfPaths()).isZero();
+    assertThat(fileMetrics.numberOfSchemas()).isZero();
+    assertThat(fileMetrics.complexity()).isZero();
   }
 
   private FileMetrics metrics(String fileName) {

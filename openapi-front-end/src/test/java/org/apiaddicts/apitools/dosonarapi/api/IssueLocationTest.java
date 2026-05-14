@@ -180,7 +180,7 @@ public class IssueLocationTest {
     IssueLocation loc1 = IssueLocation.atLineLevel(null, 10);
     IssueLocation loc2 = IssueLocation.atLineLevel(null, 10);
     assertThat(loc1.equals(loc2)).isTrue();
-    assertThat(loc1.hashCode()).isEqualTo(loc2.hashCode());
+    assertThat(loc1).hasSameHashCodeAs(loc2);
   }
 
   @Test

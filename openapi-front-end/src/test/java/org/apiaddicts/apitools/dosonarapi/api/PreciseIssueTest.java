@@ -74,7 +74,7 @@ public class PreciseIssueTest {
   public void hashcode_without_cost() {
     PreciseIssue issue1 = new PreciseIssue(IssueLocation.atLineLevel("msg", 1));
     PreciseIssue issue2 = new PreciseIssue(IssueLocation.atLineLevel("msg", 1));
-    assertThat(issue1.hashCode()).isEqualTo(issue2.hashCode());
+    assertThat(issue1).hasSameHashCodeAs(issue2);
   }
 
   @Test
@@ -82,7 +82,7 @@ public class PreciseIssueTest {
     PreciseIssue issue1 = new PreciseIssue(null);
     PreciseIssue issue2 = new PreciseIssue(null);
     assertThat(issue1.equals(issue2)).isTrue();
-    assertThat(issue1.hashCode()).isEqualTo(issue2.hashCode());
+    assertThat(issue1).hasSameHashCodeAs(issue2);
   }
 
   @Test

@@ -29,8 +29,7 @@ public class CheckListTest {
   @Test
   public void returns_all_check_classes() {
     List<Class<?>> checks = CheckList.getChecks();
-    assertThat(checks).isNotEmpty();
-    assertThat(checks).contains(
+    assertThat(checks).isNotEmpty().contains(
       PathMaskeradingCheck.class,
       MediaTypeCheck.class,
       ParsingErrorCheck.class,

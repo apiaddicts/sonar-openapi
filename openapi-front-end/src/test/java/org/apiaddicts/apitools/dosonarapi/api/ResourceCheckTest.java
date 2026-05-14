@@ -23,6 +23,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
+import org.junit.experimental.theories.DataPoints;
+import org.junit.experimental.theories.Theories;
+import org.junit.experimental.theories.Theory;
+import org.junit.runner.RunWith;
 import org.apiaddicts.apitools.dosonarapi.openapi.OpenApiConfiguration;
 import org.apiaddicts.apitools.dosonarapi.openapi.parser.OpenApiParser;
 import org.apiaddicts.apitools.dosonarapi.sslr.yaml.grammar.JsonNode;
@@ -30,6 +34,7 @@ import org.apiaddicts.apitools.dosonarapi.sslr.yaml.grammar.YamlParser;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@RunWith(Theories.class)
 public class ResourceCheckTest {
 
   private static class RecordingResourceCheck extends ResourceCheck {
@@ -41,7 +46,7 @@ public class ResourceCheckTest {
     }
   }
 
-  private OpenApiVisitorContext createV2Context(String yaml) {
+  private static OpenApiVisitorContext createV2Context(String yaml) {
     OpenApiConfiguration config = new OpenApiConfiguration(StandardCharsets.UTF_8, true);
     YamlParser parser = OpenApiParser.createV2(config);
     JsonNode root = parser.parse(yaml);
@@ -50,6 +55,51 @@ public class ResourceCheckTest {
       @Override public String fileName() { return "test.yaml"; }
     };
     return new OpenApiVisitorContext(root, parser.getIssues(), file);
+  }
+
+  @DataPoints
+  public static String[] yamlsWithNoResourcePaths() {
+    return new String[] {
+      "swagger: \"2.0\"\n" +
+      "info:\n" +
+      "  version: 1.0.0\n" +
+      "  title: Test\n" +
+      "paths:\n" +
+      "  /pets/{petId}:\n" +
+      "    get:\n" +
+      "      responses:\n" +
+      "        '200':\n" +
+      "          description: ok\n",
+
+      "swagger: \"2.0\"\n" +
+      "info:\n" +
+      "  version: 1.0.0\n" +
+      "  title: Test\n" +
+      "paths:\n" +
+      "  /pets/:\n" +
+      "    get:\n" +
+      "      responses:\n" +
+      "        '200':\n" +
+      "          description: ok\n",
+
+      "swagger: \"2.0\"\n" +
+      "info:\n" +
+      "  version: 1.0.0\n" +
+      "  title: Test\n" +
+      "paths:\n" +
+      "  /{entity}:\n" +
+      "    get:\n" +
+      "      responses:\n" +
+      "        '200':\n" +
+      "          description: ok\n"
+    };
+  }
+
+  @Theory
+  public void does_not_visit_non_resource_paths(String yaml) {
+    RecordingResourceCheck check = new RecordingResourceCheck();
+    check.scanFileForIssues(createV2Context(yaml));
+    assertThat(check.visitedPaths).isEmpty();
   }
 
   @Test
@@ -74,28 +124,7 @@ public class ResourceCheckTest {
     RecordingResourceCheck check = new RecordingResourceCheck();
     check.scanFileForIssues(createV2Context(yaml));
 
-    assertThat(check.visitedPaths).contains("/pets");
-    assertThat(check.visitedPaths).doesNotContain("/pets/{petId}");
-  }
-
-  @Test
-  public void does_not_visit_when_no_resource_paths() {
-    String yaml =
-      "swagger: \"2.0\"\n" +
-      "info:\n" +
-      "  version: 1.0.0\n" +
-      "  title: Test\n" +
-      "paths:\n" +
-      "  /pets/{petId}:\n" +
-      "    get:\n" +
-      "      responses:\n" +
-      "        '200':\n" +
-      "          description: ok\n";
-
-    RecordingResourceCheck check = new RecordingResourceCheck();
-    check.scanFileForIssues(createV2Context(yaml));
-
-    assertThat(check.visitedPaths).isEmpty();
+    assertThat(check.visitedPaths).contains("/pets").doesNotContain("/pets/{petId}");
   }
 
   @Test
@@ -124,46 +153,6 @@ public class ResourceCheckTest {
   }
 
   @Test
-  public void skips_path_ending_with_trailing_slash() {
-    String yaml =
-      "swagger: \"2.0\"\n" +
-      "info:\n" +
-      "  version: 1.0.0\n" +
-      "  title: Test\n" +
-      "paths:\n" +
-      "  /pets/:\n" +
-      "    get:\n" +
-      "      responses:\n" +
-      "        '200':\n" +
-      "          description: ok\n";
-
-    RecordingResourceCheck check = new RecordingResourceCheck();
-    check.scanFileForIssues(createV2Context(yaml));
-
-    assertThat(check.visitedPaths).isEmpty();
-  }
-
-  @Test
-  public void skips_path_with_only_variable_last_segment() {
-    String yaml =
-      "swagger: \"2.0\"\n" +
-      "info:\n" +
-      "  version: 1.0.0\n" +
-      "  title: Test\n" +
-      "paths:\n" +
-      "  /{entity}:\n" +
-      "    get:\n" +
-      "      responses:\n" +
-      "        '200':\n" +
-      "          description: ok\n";
-
-    RecordingResourceCheck check = new RecordingResourceCheck();
-    check.scanFileForIssues(createV2Context(yaml));
-
-    assertThat(check.visitedPaths).isEmpty();
-  }
-
-  @Test
   public void path_is_last_without_following_variable_child_is_not_resource() {
     String yaml =
       "swagger: \"2.0\"\n" +
@@ -185,7 +174,6 @@ public class ResourceCheckTest {
     RecordingResourceCheck check = new RecordingResourceCheck();
     check.scanFileForIssues(createV2Context(yaml));
 
-    assertThat(check.visitedPaths).doesNotContain("/pets");
-    assertThat(check.visitedPaths).doesNotContain("/other");
+    assertThat(check.visitedPaths).doesNotContain("/pets", "/other");
   }
 }

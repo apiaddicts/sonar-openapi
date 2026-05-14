@@ -31,8 +31,7 @@ public class OpenApiMetricsTest {
   public void provides_three_metrics() {
     OpenApiMetrics openApiMetrics = new OpenApiMetrics();
     List<Metric> metrics = openApiMetrics.getMetrics();
-    assertThat(metrics).hasSize(3);
-    assertThat(metrics).contains(OpenApiMetrics.OPERATIONS_COUNT, OpenApiMetrics.PATHS_COUNT, OpenApiMetrics.SCHEMAS_COUNT);
+    assertThat(metrics).hasSize(3).contains(OpenApiMetrics.OPERATIONS_COUNT, OpenApiMetrics.PATHS_COUNT, OpenApiMetrics.SCHEMAS_COUNT);
   }
 
   @Test

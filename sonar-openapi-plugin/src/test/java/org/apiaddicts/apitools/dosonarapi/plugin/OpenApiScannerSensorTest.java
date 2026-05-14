@@ -122,7 +122,7 @@ public class OpenApiScannerSensorTest {
       .activate()
       .build();
 
-    InputFile inputFile = inputFile("file1.json");
+    inputFile("file1.json");
     sensor().execute(context);
 
     assertThat(context.allIssues()).hasSize(1);
