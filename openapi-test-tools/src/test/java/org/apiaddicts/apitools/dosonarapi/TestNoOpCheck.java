@@ -17,19 +17,16 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package org.apiaddicts.apitools.dosonarapi.checks;
+package org.apiaddicts.apitools.dosonarapi;
 
-import org.junit.Test;
-import org.apiaddicts.apitools.dosonarapi.OpenApiCheckVerifier;
+import com.sonar.sslr.api.AstNodeType;
+import java.util.Collections;
+import java.util.Set;
+import org.apiaddicts.apitools.dosonarapi.api.OpenApiCheck;
 
-public class DocumentedTagCheckTest {
-  @Test
-  public void verify_documented_tag_in_v2() {
-    OpenApiCheckVerifier.verify("src/test/resources/checks/v2/documented-tag.yaml", new DocumentedTagCheck(), true, false, false);
-  }
-
-  @Test
-  public void verify_documented_tag_in_v3() {
-    OpenApiCheckVerifier.verify("src/test/resources/checks/v3/documented-tag.yaml", new DocumentedTagCheck(), false, true, false);
+public class TestNoOpCheck extends OpenApiCheck {
+  @Override
+  public Set<AstNodeType> subscribedKinds() {
+    return Collections.emptySet();
   }
 }

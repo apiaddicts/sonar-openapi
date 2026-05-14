@@ -17,19 +17,26 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package org.apiaddicts.apitools.dosonarapi.checks;
+package org.apiaddicts.apitools.dosonarapi.openapi;
 
+import java.nio.charset.StandardCharsets;
 import org.junit.Test;
-import org.apiaddicts.apitools.dosonarapi.OpenApiCheckVerifier;
 
-public class DocumentedTagCheckTest {
+import static org.assertj.core.api.Assertions.assertThat;
+
+public class OpenApiConfigurationTest {
+
   @Test
-  public void verify_documented_tag_in_v2() {
-    OpenApiCheckVerifier.verify("src/test/resources/checks/v2/documented-tag.yaml", new DocumentedTagCheck(), true, false, false);
+  public void stores_charset_and_strict_flag() {
+    OpenApiConfiguration config = new OpenApiConfiguration(StandardCharsets.UTF_8, true);
+    assertThat(config.getCharset()).isEqualTo(StandardCharsets.UTF_8);
+    assertThat(config.isStrict()).isTrue();
   }
 
   @Test
-  public void verify_documented_tag_in_v3() {
-    OpenApiCheckVerifier.verify("src/test/resources/checks/v3/documented-tag.yaml", new DocumentedTagCheck(), false, true, false);
+  public void strict_false() {
+    OpenApiConfiguration config = new OpenApiConfiguration(StandardCharsets.ISO_8859_1, false);
+    assertThat(config.getCharset()).isEqualTo(StandardCharsets.ISO_8859_1);
+    assertThat(config.isStrict()).isFalse();
   }
 }

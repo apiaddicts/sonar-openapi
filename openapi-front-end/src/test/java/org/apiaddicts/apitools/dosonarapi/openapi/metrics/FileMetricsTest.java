@@ -19,10 +19,12 @@
  */
 package org.apiaddicts.apitools.dosonarapi.openapi.metrics;
 
+import com.sonar.sslr.api.RecognitionException;
 import java.io.File;
 
-import org.apiaddicts.apitools.dosonarapi.openapi.metrics.FileMetrics;
+import org.apiaddicts.apitools.dosonarapi.api.OpenApiFile;
 import org.junit.Test;
+import org.apiaddicts.apitools.dosonarapi.api.OpenApiVisitorContext;
 import org.apiaddicts.apitools.dosonarapi.api.TestOpenApiVisitorRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -47,6 +49,21 @@ public class FileMetricsTest {
   @Test
   public void complexity() {
     assertThat(metrics("complexity.yaml").complexity()).isEqualTo(7);
+  }
+
+  @Test
+  public void null_root_tree_yields_zero_counts() {
+    OpenApiFile file = new OpenApiFile() {
+      @Override public String content() { return ""; }
+      @Override public String fileName() { return "dummy.yaml"; }
+    };
+    OpenApiVisitorContext context = new OpenApiVisitorContext(file, new RecognitionException(0, "parse error"));
+    FileMetrics fileMetrics = new FileMetrics(context);
+
+    assertThat(fileMetrics.numberOfOperations()).isEqualTo(0);
+    assertThat(fileMetrics.numberOfPaths()).isEqualTo(0);
+    assertThat(fileMetrics.numberOfSchemas()).isEqualTo(0);
+    assertThat(fileMetrics.complexity()).isEqualTo(0);
   }
 
   private FileMetrics metrics(String fileName) {

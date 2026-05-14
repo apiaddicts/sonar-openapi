@@ -17,19 +17,25 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package org.apiaddicts.apitools.dosonarapi.checks;
+package org.apiaddicts.apitools.dosonarapi.plugin;
 
 import org.junit.Test;
-import org.apiaddicts.apitools.dosonarapi.OpenApiCheckVerifier;
+import org.sonar.api.Plugin;
+import org.sonar.api.SonarQubeSide;
+import org.sonar.api.internal.SonarRuntimeImpl;
+import org.sonar.api.utils.Version;
+import org.apiaddicts.apitools.dosonarapi.openapi.metrics.OpenApiMetrics;
 
-public class DocumentedTagCheckTest {
-  @Test
-  public void verify_documented_tag_in_v2() {
-    OpenApiCheckVerifier.verify("src/test/resources/checks/v2/documented-tag.yaml", new DocumentedTagCheck(), true, false, false);
-  }
+import static org.assertj.core.api.Assertions.assertThat;
+
+public class OpenApiPluginTest {
 
   @Test
-  public void verify_documented_tag_in_v3() {
-    OpenApiCheckVerifier.verify("src/test/resources/checks/v3/documented-tag.yaml", new DocumentedTagCheck(), false, true, false);
+  public void defines_expected_extensions() {
+    Plugin.Context context = new Plugin.Context(SonarRuntimeImpl.forSonarQube(Version.create(6, 7), SonarQubeSide.SERVER));
+    new OpenApiPlugin().define(context);
+
+    assertThat(context.getExtensions())
+      .contains(OpenApiScannerSensor.class, OpenApiRulesDefinition.class, OpenApiMetrics.class);
   }
 }

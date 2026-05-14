@@ -17,19 +17,24 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package org.apiaddicts.apitools.dosonarapi.checks;
+package org.apiaddicts.apitools.dosonarapi.plugin;
 
 import org.junit.Test;
-import org.apiaddicts.apitools.dosonarapi.OpenApiCheckVerifier;
 
-public class DocumentedTagCheckTest {
+import static org.assertj.core.api.Assertions.assertThat;
+
+public class MissingPropertyExceptionTest {
+
   @Test
-  public void verify_documented_tag_in_v2() {
-    OpenApiCheckVerifier.verify("src/test/resources/checks/v2/documented-tag.yaml", new DocumentedTagCheck(), true, false, false);
+  public void stores_property_name_and_message() {
+    MissingPropertyException ex = new MissingPropertyException("my.property");
+    assertThat(ex.getPropertyName()).isEqualTo("my.property");
+    assertThat(ex.getMessage()).isEqualTo("Property my.property is not defined!");
   }
 
   @Test
-  public void verify_documented_tag_in_v3() {
-    OpenApiCheckVerifier.verify("src/test/resources/checks/v3/documented-tag.yaml", new DocumentedTagCheck(), false, true, false);
+  public void is_runtime_exception() {
+    MissingPropertyException ex = new MissingPropertyException("foo");
+    assertThat(ex).isInstanceOf(RuntimeException.class);
   }
 }

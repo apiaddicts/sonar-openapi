@@ -17,19 +17,23 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package org.apiaddicts.apitools.dosonarapi.checks;
+package org.apiaddicts.apitools.dosonarapi;
 
-import org.junit.Test;
-import org.apiaddicts.apitools.dosonarapi.OpenApiCheckVerifier;
+import com.google.common.collect.Sets;
+import com.sonar.sslr.api.AstNodeType;
+import java.util.Set;
+import org.apiaddicts.apitools.dosonarapi.api.OpenApiCheck;
+import org.apiaddicts.apitools.dosonarapi.api.v2.OpenApi2Grammar;
+import org.apiaddicts.apitools.dosonarapi.sslr.yaml.grammar.JsonNode;
 
-public class DocumentedTagCheckTest {
-  @Test
-  public void verify_documented_tag_in_v2() {
-    OpenApiCheckVerifier.verify("src/test/resources/checks/v2/documented-tag.yaml", new DocumentedTagCheck(), true, false, false);
+public class TestPathsReportCheck extends OpenApiCheck {
+  @Override
+  public Set<AstNodeType> subscribedKinds() {
+    return Sets.newHashSet(OpenApi2Grammar.PATHS);
   }
 
-  @Test
-  public void verify_documented_tag_in_v3() {
-    OpenApiCheckVerifier.verify("src/test/resources/checks/v3/documented-tag.yaml", new DocumentedTagCheck(), false, true, false);
+  @Override
+  protected void visitNode(JsonNode node) {
+    addIssue("paths issue", node);
   }
 }
