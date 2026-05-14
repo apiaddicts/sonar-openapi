@@ -29,7 +29,7 @@ public class OpenApiProfileDefinition implements BuiltInQualityProfilesDefinitio
 
   @Override
   public void define(BuiltInQualityProfilesDefinition.Context context) {
-    createProfile(context, CheckList.YAML_LANGUAGE, CheckList.REPOSITORY_KEY);
+    createProfile(context, CheckList.YAML_LANGUAGE, CheckList.YAML_REPOSITORY_KEY);
     createProfile(context, CheckList.JSON_LANGUAGE, CheckList.JSON_REPOSITORY_KEY);
   }
 

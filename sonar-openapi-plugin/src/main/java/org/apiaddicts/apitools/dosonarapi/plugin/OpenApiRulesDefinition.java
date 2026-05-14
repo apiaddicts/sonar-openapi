@@ -59,7 +59,7 @@ public class OpenApiRulesDefinition implements RulesDefinition, OpenApiCustomRul
 
   @Override
   public String repositoryKey() {
-    return CheckList.REPOSITORY_KEY;
+    return CheckList.YAML_REPOSITORY_KEY;
   }
 
   @Override

@@ -84,7 +84,7 @@ public class OpenApiScannerSensorTest {
   @Test
   public void test_issues() {
     activeRules = (new ActiveRulesBuilder())
-      .create(RuleKey.of(CheckList.REPOSITORY_KEY, "PathMaskerading"))
+      .create(RuleKey.of(CheckList.YAML_REPOSITORY_KEY, "PathMaskerading"))
       .activate()
       .build();
 
@@ -116,10 +116,39 @@ public class OpenApiScannerSensorTest {
   }
 
   @Test
+  public void test_json_issues_single_per_violation() {
+    activeRules = (new ActiveRulesBuilder())
+      .create(RuleKey.of(CheckList.JSON_REPOSITORY_KEY, "PathMaskerading"))
+      .activate()
+      .build();
+
+    InputFile inputFile = inputFile("file1.json");
+    sensor().execute(context);
+
+    assertThat(context.allIssues()).hasSize(1);
+    Issue issue = Iterables.get(context.allIssues(), 0);
+    assertThat(issue.ruleKey().repository()).isEqualTo(CheckList.JSON_REPOSITORY_KEY);
+    assertThat(context.allAnalysisErrors()).isEmpty();
+  }
+
+  @Test
+  public void test_yaml_rules_do_not_fire_on_json_files() {
+    activeRules = (new ActiveRulesBuilder())
+      .create(RuleKey.of(CheckList.YAML_REPOSITORY_KEY, "PathMaskerading"))
+      .activate()
+      .build();
+
+    inputFile("file1.json");
+    sensor().execute(context);
+
+    assertThat(context.allIssues()).isEmpty();
+  }
+
+  @Test
   public void parse_error() {
     inputFile("parse-error.yaml");
     activeRules = (new ActiveRulesBuilder())
-      .create(RuleKey.of(CheckList.REPOSITORY_KEY, ParsingErrorCheck.CHECK_KEY))
+      .create(RuleKey.of(CheckList.YAML_REPOSITORY_KEY, ParsingErrorCheck.CHECK_KEY))
       .activate()
       .build();
     sensor().execute(context);
@@ -136,7 +165,7 @@ public class OpenApiScannerSensorTest {
   public void parse_openapi3_headers_ref() {
     inputFile("headers_ref.yaml");
     activeRules = (new ActiveRulesBuilder())
-            .create(RuleKey.of(CheckList.REPOSITORY_KEY, ParsingErrorCheck.CHECK_KEY))
+            .create(RuleKey.of(CheckList.YAML_REPOSITORY_KEY, ParsingErrorCheck.CHECK_KEY))
             .activate()
             .build();
     sensor().execute(context);
@@ -146,7 +175,7 @@ public class OpenApiScannerSensorTest {
   public void parse_yaml_break_comment_ok() {
     inputFile("parse-yaml.yaml");
     activeRules = (new ActiveRulesBuilder())
-            .create(RuleKey.of(CheckList.REPOSITORY_KEY, ParsingErrorCheck.CHECK_KEY))
+            .create(RuleKey.of(CheckList.YAML_REPOSITORY_KEY, ParsingErrorCheck.CHECK_KEY))
             .activate()
             .build();
     sensor().execute(context);
@@ -158,7 +187,7 @@ public class OpenApiScannerSensorTest {
   public void parse_yaml_slash_ok() {
     inputFile("parse-error-slash.json");
     activeRules = (new ActiveRulesBuilder())
-            .create(RuleKey.of(CheckList.REPOSITORY_KEY, ParsingErrorCheck.CHECK_KEY))
+            .create(RuleKey.of(CheckList.YAML_REPOSITORY_KEY, ParsingErrorCheck.CHECK_KEY))
             .activate()
             .build();
     sensor().execute(context);
@@ -170,7 +199,7 @@ public class OpenApiScannerSensorTest {
   public void parse_yaml_tabs_ok() {
     inputFile("parse-error-tabs.json");
     activeRules = (new ActiveRulesBuilder())
-            .create(RuleKey.of(CheckList.REPOSITORY_KEY, ParsingErrorCheck.CHECK_KEY))
+            .create(RuleKey.of(CheckList.YAML_REPOSITORY_KEY, ParsingErrorCheck.CHECK_KEY))
             .activate()
             .build();
     sensor().execute(context);
@@ -182,7 +211,7 @@ public class OpenApiScannerSensorTest {
   public void parse_yaml_tabs_ok_31() {
     inputFile("file2.yaml");
     activeRules = (new ActiveRulesBuilder())
-            .create(RuleKey.of(CheckList.REPOSITORY_KEY, ParsingErrorCheck.CHECK_KEY))
+            .create(RuleKey.of(CheckList.YAML_REPOSITORY_KEY, ParsingErrorCheck.CHECK_KEY))
             .activate()
             .build();
     sensor().execute(context);
@@ -197,7 +226,7 @@ public class OpenApiScannerSensorTest {
     for (String file: files) {
       context = SensorContextTester.create(baseDir);
       inputFile(file);
-      activeRules = (new ActiveRulesBuilder()).create(RuleKey.of(CheckList.REPOSITORY_KEY, ParsingErrorCheck.CHECK_KEY))
+      activeRules = (new ActiveRulesBuilder()).create(RuleKey.of(CheckList.YAML_REPOSITORY_KEY, ParsingErrorCheck.CHECK_KEY))
               .activate().build();
       sensor().execute(context);
       if (!context.allIssues().isEmpty() || !context.allAnalysisErrors().isEmpty()) errorFiles.add(file);

@@ -38,7 +38,8 @@ import org.apiaddicts.apitools.dosonarapi.api.OpenApiCustomRuleRepository;
 
 public class OpenApiScannerSensor implements Sensor {
   private static final Logger LOGGER = Loggers.get(OpenApiScannerSensor.class);
-  private final OpenApiChecks checks;
+  private final OpenApiChecks yamlChecks;
+  private final OpenApiChecks jsonChecks;
   private FileLinesContextFactory fileLinesContextFactory;
   private final NoSonarFilter noSonarFilter;
 
@@ -47,10 +48,12 @@ public class OpenApiScannerSensor implements Sensor {
   }
 
   public OpenApiScannerSensor(CheckFactory checkFactory, FileLinesContextFactory fileLinesContextFactory, NoSonarFilter noSonarFilter, @Nullable OpenApiCustomRuleRepository[] customRuleRepositories) {
-    this.checks = OpenApiChecks.createOpenApiCheck(checkFactory)
-      .addChecks(CheckList.REPOSITORY_KEY, CheckList.getChecks())
+    this.yamlChecks = OpenApiChecks.createOpenApiCheck(checkFactory)
+      .addChecks(CheckList.YAML_REPOSITORY_KEY, CheckList.getChecks())
+      .addCustomYamlChecks(customRuleRepositories);
+    this.jsonChecks = OpenApiChecks.createOpenApiCheck(checkFactory)
       .addChecks(CheckList.JSON_REPOSITORY_KEY, CheckList.getChecks())
-      .addCustomChecks(customRuleRepositories);
+      .addCustomJsonChecks(customRuleRepositories);
     this.fileLinesContextFactory = fileLinesContextFactory;
     this.noSonarFilter = noSonarFilter;
   }
@@ -69,18 +72,23 @@ public class OpenApiScannerSensor implements Sensor {
   }
 
   public void scanFiles(SensorContext context, FilePredicates p) {
-    Iterable<InputFile> it = context.fileSystem().inputFiles(
-      p.and(p.hasType(InputFile.Type.MAIN),
-        p.or(p.hasLanguage(CheckList.YAML_LANGUAGE), p.hasLanguage(CheckList.JSON_LANGUAGE))
-        ));
-    List<InputFile> list = new ArrayList<>();
-    it.forEach(list::add);
-    List<InputFile> inputFiles = Collections.unmodifiableList(list);
+    List<InputFile> yamlFiles = new ArrayList<>();
+    context.fileSystem().inputFiles(
+      p.and(p.hasType(InputFile.Type.MAIN), p.hasLanguage(CheckList.YAML_LANGUAGE))
+    ).forEach(yamlFiles::add);
 
-    if (!inputFiles.isEmpty()) {
-      OpenApiAnalyzer scanner = new OpenApiAnalyzer(context, checks, fileLinesContextFactory, noSonarFilter, inputFiles/*, isV2*/);
-      LOGGER.info("OpenAPI Scanner called for the following files: {}.", inputFiles);
-      scanner.scanFiles();
+    List<InputFile> jsonFiles = new ArrayList<>();
+    context.fileSystem().inputFiles(
+      p.and(p.hasType(InputFile.Type.MAIN), p.hasLanguage(CheckList.JSON_LANGUAGE))
+    ).forEach(jsonFiles::add);
+
+    if (!yamlFiles.isEmpty()) {
+      LOGGER.info("OpenAPI Scanner called for yaml files: {}.", yamlFiles);
+      new OpenApiAnalyzer(context, yamlChecks, fileLinesContextFactory, noSonarFilter, Collections.unmodifiableList(yamlFiles)).scanFiles();
+    }
+    if (!jsonFiles.isEmpty()) {
+      LOGGER.info("OpenAPI Scanner called for json files: {}.", jsonFiles);
+      new OpenApiAnalyzer(context, jsonChecks, fileLinesContextFactory, noSonarFilter, Collections.unmodifiableList(jsonFiles)).scanFiles();
     }
   }
 }

@@ -41,7 +41,7 @@ public class OpenApiProfileDefinitionTest {
     assertThat(yamlProfile).isNotNull();
     assertThat(yamlProfile.language()).isEqualTo(CheckList.YAML_LANGUAGE);
     assertThat(yamlProfile.rules()).hasSizeGreaterThanOrEqualTo(2);
-    assertThat(yamlProfile.rules()).allMatch(r -> r.repoKey().equals(CheckList.REPOSITORY_KEY));
+    assertThat(yamlProfile.rules()).allMatch(r -> r.repoKey().equals(CheckList.YAML_REPOSITORY_KEY));
 
     BuiltInQualityProfile jsonProfile = context.profile(CheckList.JSON_LANGUAGE, SONAR_WAY_PROFILE);
     assertThat(jsonProfile).isNotNull();

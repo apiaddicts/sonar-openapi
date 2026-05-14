@@ -59,13 +59,41 @@ public class OpenApiChecks {
     if (customRuleRepositories != null) {
 
       for (OpenApiCustomRuleRepository ruleRepository : customRuleRepositories) {
-        if (!ruleRepository.repositoryKey().equals(CheckList.REPOSITORY_KEY) &&
+        if (!ruleRepository.repositoryKey().equals(CheckList.YAML_REPOSITORY_KEY) &&
             !ruleRepository.repositoryKey().equals(CheckList.JSON_REPOSITORY_KEY)) {
           addChecks(ruleRepository.repositoryKey(), new ArrayList<>(ruleRepository.checkClasses()));
         }
       }
     }
 
+    return this;
+  }
+
+  public OpenApiChecks addCustomYamlChecks(@Nullable OpenApiCustomRuleRepository[] customRuleRepositories) {
+    if (customRuleRepositories != null) {
+      for (OpenApiCustomRuleRepository ruleRepository : customRuleRepositories) {
+        String key = ruleRepository.repositoryKey();
+        if (!key.equals(CheckList.YAML_REPOSITORY_KEY) &&
+            !key.equals(CheckList.JSON_REPOSITORY_KEY) &&
+            !key.endsWith("-json")) {
+          addChecks(key, new ArrayList<>(ruleRepository.checkClasses()));
+        }
+      }
+    }
+    return this;
+  }
+
+  public OpenApiChecks addCustomJsonChecks(@Nullable OpenApiCustomRuleRepository[] customRuleRepositories) {
+    if (customRuleRepositories != null) {
+      for (OpenApiCustomRuleRepository ruleRepository : customRuleRepositories) {
+        String key = ruleRepository.repositoryKey();
+        if (!key.equals(CheckList.YAML_REPOSITORY_KEY) &&
+            !key.equals(CheckList.JSON_REPOSITORY_KEY) &&
+            key.endsWith("-json")) {
+          addChecks(key, new ArrayList<>(ruleRepository.checkClasses()));
+        }
+      }
+    }
     return this;
   }
 
