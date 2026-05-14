@@ -77,7 +77,7 @@ public class OpenApiScannerSensorTest {
     sensor().describe(descriptor);
 
     assertThat(descriptor.name()).isEqualTo("OpenAPI Scanner Sensor");
-    assertThat(descriptor.languages()).containsOnly("openapi");
+    assertThat(descriptor.languages()).containsOnly("yaml", "json");
     assertThat(descriptor.type()).isEqualTo(InputFile.Type.MAIN);
   }
 
@@ -223,11 +223,12 @@ public class OpenApiScannerSensorTest {
   }
 
   private InputFile inputFile(String name) {
+    String language = name.endsWith(".json") ? CheckList.JSON_LANGUAGE : CheckList.YAML_LANGUAGE;
     DefaultInputFile inputFile = TestInputFileBuilder.create("moduleKey", name)
       .setModuleBaseDir(baseDir)
       .setCharset(StandardCharsets.UTF_8)
       .setType(InputFile.Type.MAIN)
-      .setLanguage(OpenApi.KEY)
+      .setLanguage(language)
       .initMetadata(TestUtils.fileContent(new File(baseDir.toFile(), name), StandardCharsets.UTF_8))
       .build();
     context.fileSystem().add(inputFile);

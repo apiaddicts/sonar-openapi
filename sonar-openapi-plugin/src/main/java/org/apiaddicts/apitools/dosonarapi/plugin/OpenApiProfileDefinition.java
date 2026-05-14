@@ -25,15 +25,19 @@ import org.sonar.check.Rule;
 import org.apiaddicts.apitools.dosonarapi.checks.CheckList;
 
 public class OpenApiProfileDefinition implements BuiltInQualityProfilesDefinition {
-  public static final String SONAR_WAY_PROFILE = "Sonar way";
+  public static final String SONAR_WAY_PROFILE = "Sonar way OpenAPI";
 
   @Override
   public void define(BuiltInQualityProfilesDefinition.Context context) {
-    NewBuiltInQualityProfile profile = context.createBuiltInQualityProfile(SONAR_WAY_PROFILE, OpenApi.KEY);
-    profile.setDefault(true);
+    createProfile(context, CheckList.YAML_LANGUAGE, CheckList.REPOSITORY_KEY);
+    createProfile(context, CheckList.JSON_LANGUAGE, CheckList.JSON_REPOSITORY_KEY);
+  }
+
+  private void createProfile(BuiltInQualityProfilesDefinition.Context context, String language, String repositoryKey) {
+    NewBuiltInQualityProfile profile = context.createBuiltInQualityProfile(SONAR_WAY_PROFILE, language);
     for (Class<?> check : CheckList.getChecks()) {
       Rule annotation = AnnotationUtils.getAnnotation(check, Rule.class);
-      profile.activateRule(CheckList.REPOSITORY_KEY, annotation.key());
+      profile.activateRule(repositoryKey, annotation.key());
     }
     profile.done();
   }

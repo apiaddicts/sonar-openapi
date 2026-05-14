@@ -20,36 +20,33 @@
 package org.apiaddicts.apitools.dosonarapi.plugin;
 
 import org.junit.Test;
-import org.mockito.Mockito;
+import org.sonar.api.server.profile.BuiltInQualityProfilesDefinition;
 import org.sonar.api.server.profile.BuiltInQualityProfilesDefinition.Context;
-import org.sonar.api.server.profile.BuiltInQualityProfilesDefinition.NewBuiltInQualityProfile;
+import org.sonar.api.server.profile.BuiltInQualityProfilesDefinition.BuiltInQualityProfile;
 import org.apiaddicts.apitools.dosonarapi.checks.CheckList;
 
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.apiaddicts.apitools.dosonarapi.plugin.OpenApiProfileDefinition.SONAR_WAY_PROFILE;
 
 public class OpenApiProfileDefinitionTest {
-  private static Context context(NewBuiltInQualityProfile profile) {
-    Context context = mock(Context.class);
-    when(context.createBuiltInQualityProfile(anyString(), anyString())).thenReturn(profile);
-    return context;
-  }
 
   @Test
-  public void should_create_sonar_way_profile() {
+  public void should_create_yaml_and_json_profiles() {
     OpenApiProfileDefinition definition = new OpenApiProfileDefinition();
-    NewBuiltInQualityProfile profile = mock(NewBuiltInQualityProfile.class);
-    Context context = context(profile);
+    Context context = new BuiltInQualityProfilesDefinition.Context();
 
     definition.define(context);
-    ;
 
-    verify(context).createBuiltInQualityProfile(SONAR_WAY_PROFILE, OpenApi.KEY);
-    verify(profile).setDefault(true);
-    verify(profile, Mockito.atLeast(2)).activateRule(eq(CheckList.REPOSITORY_KEY), anyString());
+    BuiltInQualityProfile yamlProfile = context.profile(CheckList.YAML_LANGUAGE, SONAR_WAY_PROFILE);
+    assertThat(yamlProfile).isNotNull();
+    assertThat(yamlProfile.language()).isEqualTo(CheckList.YAML_LANGUAGE);
+    assertThat(yamlProfile.rules()).hasSizeGreaterThanOrEqualTo(2);
+    assertThat(yamlProfile.rules()).allMatch(r -> r.repoKey().equals(CheckList.REPOSITORY_KEY));
+
+    BuiltInQualityProfile jsonProfile = context.profile(CheckList.JSON_LANGUAGE, SONAR_WAY_PROFILE);
+    assertThat(jsonProfile).isNotNull();
+    assertThat(jsonProfile.language()).isEqualTo(CheckList.JSON_LANGUAGE);
+    assertThat(jsonProfile.rules()).hasSizeGreaterThanOrEqualTo(2);
+    assertThat(jsonProfile.rules()).allMatch(r -> r.repoKey().equals(CheckList.JSON_REPOSITORY_KEY));
   }
 }

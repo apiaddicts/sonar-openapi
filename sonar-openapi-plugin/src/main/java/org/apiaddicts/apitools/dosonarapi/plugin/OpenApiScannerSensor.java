@@ -49,6 +49,7 @@ public class OpenApiScannerSensor implements Sensor {
   public OpenApiScannerSensor(CheckFactory checkFactory, FileLinesContextFactory fileLinesContextFactory, NoSonarFilter noSonarFilter, @Nullable OpenApiCustomRuleRepository[] customRuleRepositories) {
     this.checks = OpenApiChecks.createOpenApiCheck(checkFactory)
       .addChecks(CheckList.REPOSITORY_KEY, CheckList.getChecks())
+      .addChecks(CheckList.JSON_REPOSITORY_KEY, CheckList.getChecks())
       .addCustomChecks(customRuleRepositories);
     this.fileLinesContextFactory = fileLinesContextFactory;
     this.noSonarFilter = noSonarFilter;
@@ -58,7 +59,7 @@ public class OpenApiScannerSensor implements Sensor {
   public void describe(SensorDescriptor descriptor) {
     descriptor.name("OpenAPI Scanner Sensor")
       .onlyOnFileType(InputFile.Type.MAIN)
-      .onlyOnLanguage(OpenApi.KEY);
+      .onlyOnLanguages(CheckList.YAML_LANGUAGE, CheckList.JSON_LANGUAGE);
   }
 
   @Override
@@ -70,7 +71,7 @@ public class OpenApiScannerSensor implements Sensor {
   public void scanFiles(SensorContext context, FilePredicates p) {
     Iterable<InputFile> it = context.fileSystem().inputFiles(
       p.and(p.hasType(InputFile.Type.MAIN),
-        p.hasLanguage(OpenApi.KEY)
+        p.or(p.hasLanguage(CheckList.YAML_LANGUAGE), p.hasLanguage(CheckList.JSON_LANGUAGE))
         ));
     List<InputFile> list = new ArrayList<>();
     it.forEach(list::add);

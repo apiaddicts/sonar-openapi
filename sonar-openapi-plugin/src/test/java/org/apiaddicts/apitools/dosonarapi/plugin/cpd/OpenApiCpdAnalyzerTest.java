@@ -25,7 +25,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.apiaddicts.apitools.dosonarapi.plugin.OpenApi;
+import org.apiaddicts.apitools.dosonarapi.checks.CheckList;
 import org.apiaddicts.apitools.dosonarapi.plugin.TestUtils;
 import org.junit.Test;
 import org.sonar.api.batch.fs.InputFile;
@@ -75,7 +75,7 @@ public class OpenApiCpdAnalyzerTest {
         .setModuleBaseDir(Paths.get(BASE_DIR))
         .setCharset(UTF_8)
         .setType(InputFile.Type.MAIN)
-        .setLanguage(OpenApi.KEY)
+        .setLanguage(CheckList.YAML_LANGUAGE)
         .initMetadata(TestUtils.fileContent(file, Charsets.UTF_8))
         .build();
 

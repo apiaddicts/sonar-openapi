@@ -155,6 +155,11 @@ public class OpenApiAnalyzer {
       visitorContext = new OpenApiVisitorContext(openApiFile, re);
       LOG.error("Unable to parse file in i/o: " + inputFile.filename() + "\"\n" + ex.getMessage());
       dumpException(re, inputFile);
+    } catch (RuntimeException ex) {
+      RecognitionException re = new RecognitionException(0, ex.getMessage());
+      visitorContext = new OpenApiVisitorContext(openApiFile, re);
+      LOG.error("Unexpected error parsing file: " + inputFile.filename() + "\"\n" + ex.getMessage());
+      dumpException(re, inputFile);
     }
 
     for (OpenApiCheck check : checks.all()) {

@@ -20,53 +20,13 @@
 package org.apiaddicts.apitools.dosonarapi.plugin;
 
 import org.sonar.api.Plugin;
-import org.sonar.api.config.PropertyDefinition;
-import org.sonar.api.resources.Qualifiers;
 import org.apiaddicts.apitools.dosonarapi.openapi.metrics.OpenApiMetrics;
 
 public class OpenApiPlugin implements Plugin {
 
-  public static final String FILE_SUFFIXES_KEY = "sonar.openapi.file.suffixes";
-  public static final String OPENAPI_CATEGORY = "OpenApi";
-  // Subcategories
-  private static final String GENERAL = "General";
-
   @Override
   public void define(Context context) {
-
     context.addExtensions(
-      PropertyDefinition.builder(FILE_SUFFIXES_KEY)
-        .index(10)
-        .name("File Suffixes")
-        .description("A list of suffixes of OpenAPI files to analyze.")
-        .category(OPENAPI_CATEGORY)
-        .subCategory(GENERAL)
-        .onQualifiers(Qualifiers.PROJECT)
-        .multiValues(true)
-        .defaultValue("yaml,json")
-        .build(),
-/*      PropertyDefinition.builder(OpenApiProperties.V2_PATH_KEY)
-        .index(11)
-        .name("Paths to OpenAPI v2 contract(s)")
-        .description("Path to OpenAPI v2 contracts. Ant patterns are accepted for relative path. The contracts can be in JSON or in YAML.")
-        .category(OPENAPI_CATEGORY)
-        .subCategory(GENERAL)
-        .onQualifiers(Qualifiers.PROJECT)
-        .multiValues(true)
-        .defaultValue(OpenApiProperties.DEFAULT_V2_PATH)
-        .build(),
-      PropertyDefinition.builder(OpenApiProperties.V3_PATH_KEY)
-        .index(11)
-        .name("Paths to OpenAPI v3 contract(s)")
-        .description("Path to OpenAPI v3 contracts. Ant patterns are accepted for relative path. The contracts can be in JSON or in YAML.")
-        .category(OPENAPI_CATEGORY)
-        .subCategory(GENERAL)
-        .onQualifiers(Qualifiers.PROJECT)
-        .multiValues(true)
-        .defaultValue(OpenApiProperties.DEFAULT_V3_PATH)
-        .build(),*/
-      OpenApi.class,
-      OpenApiProfileDefinition.class,
       OpenApiScannerSensor.class,
       OpenApiRulesDefinition.class,
       OpenApiMetrics.class);

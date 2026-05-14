@@ -59,7 +59,8 @@ public class OpenApiChecks {
     if (customRuleRepositories != null) {
 
       for (OpenApiCustomRuleRepository ruleRepository : customRuleRepositories) {
-        if (!ruleRepository.repositoryKey().equals(CheckList.REPOSITORY_KEY)) {
+        if (!ruleRepository.repositoryKey().equals(CheckList.REPOSITORY_KEY) &&
+            !ruleRepository.repositoryKey().equals(CheckList.JSON_REPOSITORY_KEY)) {
           addChecks(ruleRepository.repositoryKey(), new ArrayList<>(ruleRepository.checkClasses()));
         }
       }
