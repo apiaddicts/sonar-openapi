@@ -17,19 +17,23 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package org.apiaddicts.apitools.dosonarapi.plugin;
+package org.apiaddicts.apitools.dosonarapi;
 
-import org.sonar.api.Plugin;
-import org.apiaddicts.apitools.dosonarapi.openapi.metrics.OpenApiMetrics;
+import com.google.common.collect.Sets;
+import com.sonar.sslr.api.AstNodeType;
+import java.util.Set;
+import org.apiaddicts.apitools.dosonarapi.api.OpenApiCheck;
+import org.apiaddicts.apitools.dosonarapi.api.v2.OpenApi2Grammar;
+import org.apiaddicts.apitools.dosonarapi.sslr.yaml.grammar.JsonNode;
 
-public class OpenApiPlugin implements Plugin {
-
+public class TestPathsReportCheck extends OpenApiCheck {
   @Override
-  public void define(Context context) {
-    context.addExtensions(
-      OpenApiScannerSensor.class,
-      OpenApiRulesDefinition.class,
-      OpenApiMetrics.class);
+  public Set<AstNodeType> subscribedKinds() {
+    return Sets.newHashSet(OpenApi2Grammar.PATHS);
   }
 
+  @Override
+  protected void visitNode(JsonNode node) {
+    addIssue("paths issue", node);
+  }
 }

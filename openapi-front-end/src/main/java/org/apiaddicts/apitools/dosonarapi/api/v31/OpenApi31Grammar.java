@@ -263,6 +263,7 @@ public enum OpenApi31Grammar implements GrammarRuleKey {
   private static void buildInfo(YamlGrammarBuilder b) {
     b.rule(INFO).is(b.object(
       b.mandatoryProperty("title", b.string()),
+      b.property("summary", b.string()),
       b.property("description", DESCRIPTION),
       b.property("termsOfService", b.string()),
       b.property("contact", CONTACT),

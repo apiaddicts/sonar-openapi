@@ -19,17 +19,23 @@
  */
 package org.apiaddicts.apitools.dosonarapi.plugin;
 
+import org.junit.Test;
 import org.sonar.api.Plugin;
+import org.sonar.api.SonarQubeSide;
+import org.sonar.api.internal.SonarRuntimeImpl;
+import org.sonar.api.utils.Version;
 import org.apiaddicts.apitools.dosonarapi.openapi.metrics.OpenApiMetrics;
 
-public class OpenApiPlugin implements Plugin {
+import static org.assertj.core.api.Assertions.assertThat;
 
-  @Override
-  public void define(Context context) {
-    context.addExtensions(
-      OpenApiScannerSensor.class,
-      OpenApiRulesDefinition.class,
-      OpenApiMetrics.class);
+public class OpenApiPluginTest {
+
+  @Test
+  public void defines_expected_extensions() {
+    Plugin.Context context = new Plugin.Context(SonarRuntimeImpl.forSonarQube(Version.create(6, 7), SonarQubeSide.SERVER));
+    new OpenApiPlugin().define(context);
+
+    assertThat(context.getExtensions())
+      .contains(OpenApiScannerSensor.class, OpenApiRulesDefinition.class, OpenApiMetrics.class);
   }
-
 }

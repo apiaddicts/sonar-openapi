@@ -19,22 +19,22 @@
  */
 package org.apiaddicts.apitools.dosonarapi.plugin;
 
-import org.sonar.api.server.profile.BuiltInQualityProfilesDefinition;
-import org.sonar.api.utils.AnnotationUtils;
-import org.sonar.check.Rule;
-import org.apiaddicts.apitools.dosonarapi.checks.CheckList;
+import org.junit.Test;
 
-public class OpenApiProfileDefinition implements BuiltInQualityProfilesDefinition {
-  public static final String SONAR_WAY_PROFILE = "Sonar way";
+import static org.assertj.core.api.Assertions.assertThat;
 
-  @Override
-  public void define(BuiltInQualityProfilesDefinition.Context context) {
-    NewBuiltInQualityProfile profile = context.createBuiltInQualityProfile(SONAR_WAY_PROFILE, OpenApi.KEY);
-    profile.setDefault(true);
-    for (Class<?> check : CheckList.getChecks()) {
-      Rule annotation = AnnotationUtils.getAnnotation(check, Rule.class);
-      profile.activateRule(CheckList.REPOSITORY_KEY, annotation.key());
-    }
-    profile.done();
+public class MissingPropertyExceptionTest {
+
+  @Test
+  public void stores_property_name_and_message() {
+    MissingPropertyException ex = new MissingPropertyException("my.property");
+    assertThat(ex.getPropertyName()).isEqualTo("my.property");
+    assertThat(ex.getMessage()).isEqualTo("Property my.property is not defined!");
+  }
+
+  @Test
+  public void is_runtime_exception() {
+    MissingPropertyException ex = new MissingPropertyException("foo");
+    assertThat(ex).isInstanceOf(RuntimeException.class);
   }
 }

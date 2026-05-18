@@ -19,20 +19,17 @@
  */
 package org.apiaddicts.apitools.dosonarapi.checks;
 
-import java.util.Arrays;
 import java.util.List;
+import org.junit.Test;
 
-public final class CheckList {
-  public static final String YAML_REPOSITORY_KEY = "openapi-yaml";
-  public static final String JSON_REPOSITORY_KEY = "openapi-json";
-  public static final String YAML_LANGUAGE = "yaml";
-  public static final String JSON_LANGUAGE = "json";
+import static org.assertj.core.api.Assertions.assertThat;
 
-  private CheckList() {
-  }
+public class CheckListTest {
 
-  public static List<Class<?>> getChecks() {
-    return Arrays.asList(
+  @Test
+  public void returns_all_check_classes() {
+    List<Class<?>> checks = CheckList.getChecks();
+    assertThat(checks).isNotEmpty().contains(
       PathMaskeradingCheck.class,
       MediaTypeCheck.class,
       ParsingErrorCheck.class,
@@ -47,5 +44,13 @@ public final class CheckList {
       ContactValidEmailCheck.class,
       DescriptionDiffersSummaryCheck.class
     );
+  }
+
+  @Test
+  public void constants_have_expected_values() {
+    assertThat(CheckList.YAML_REPOSITORY_KEY).isEqualTo("openapi-yaml");
+    assertThat(CheckList.JSON_REPOSITORY_KEY).isEqualTo("openapi-json");
+    assertThat(CheckList.YAML_LANGUAGE).isEqualTo("yaml");
+    assertThat(CheckList.JSON_LANGUAGE).isEqualTo("json");
   }
 }

@@ -39,8 +39,13 @@ public class OpenApiRulesDefinition implements RulesDefinition, OpenApiCustomRul
 
   @Override
   public void define(Context context) {
+    createRepository(context, repositoryKey(), CheckList.YAML_LANGUAGE);
+    createRepository(context, CheckList.JSON_REPOSITORY_KEY, CheckList.JSON_LANGUAGE);
+  }
+
+  private void createRepository(Context context, String key, String language) {
     NewRepository repository = context
-      .createRepository(repositoryKey(), OpenApi.KEY)
+      .createRepository(key, language)
       .setName(REPOSITORY_NAME);
 
     getRuleMetadataLoader().addRulesByAnnotatedClass(repository, checkClasses());
@@ -54,7 +59,7 @@ public class OpenApiRulesDefinition implements RulesDefinition, OpenApiCustomRul
 
   @Override
   public String repositoryKey() {
-    return CheckList.REPOSITORY_KEY;
+    return CheckList.YAML_REPOSITORY_KEY;
   }
 
   @Override

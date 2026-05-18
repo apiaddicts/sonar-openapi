@@ -17,19 +17,26 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package org.apiaddicts.apitools.dosonarapi.plugin;
+package org.apiaddicts.apitools.dosonarapi.openapi;
 
-import org.sonar.api.Plugin;
-import org.apiaddicts.apitools.dosonarapi.openapi.metrics.OpenApiMetrics;
+import java.nio.charset.StandardCharsets;
+import org.junit.Test;
 
-public class OpenApiPlugin implements Plugin {
+import static org.assertj.core.api.Assertions.assertThat;
 
-  @Override
-  public void define(Context context) {
-    context.addExtensions(
-      OpenApiScannerSensor.class,
-      OpenApiRulesDefinition.class,
-      OpenApiMetrics.class);
+public class OpenApiConfigurationTest {
+
+  @Test
+  public void stores_charset_and_strict_flag() {
+    OpenApiConfiguration config = new OpenApiConfiguration(StandardCharsets.UTF_8, true);
+    assertThat(config.getCharset()).isEqualTo(StandardCharsets.UTF_8);
+    assertThat(config.isStrict()).isTrue();
   }
 
+  @Test
+  public void strict_false() {
+    OpenApiConfiguration config = new OpenApiConfiguration(StandardCharsets.ISO_8859_1, false);
+    assertThat(config.getCharset()).isEqualTo(StandardCharsets.ISO_8859_1);
+    assertThat(config.isStrict()).isFalse();
+  }
 }
