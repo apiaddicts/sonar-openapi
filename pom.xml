@@ -81,7 +81,7 @@
     <sonar.analyzer.commons.version>1.22.0.848</sonar.analyzer.commons.version>
     <sonar.orchestrator.version>3.37.0.87</sonar.orchestrator.version>
     <sslr.version>1.24.0.633</sslr.version>
-    <sslr.yaml.version>1.0.0</sslr.yaml.version>
+    <sslr.yaml.version>1.0.1</sslr.yaml.version>
   </properties>
 
   <build>
