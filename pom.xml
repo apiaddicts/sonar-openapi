@@ -9,7 +9,7 @@
 
   <groupId>org.apiaddicts.apitools.dosonarapi</groupId>
   <artifactId>dosonarapi</artifactId>
-  <version>1.2.1</version>
+  <version>1.2.1-beta-1</version>
   <packaging>pom</packaging>
 
   <name>SonarOpenAPI</name>
@@ -19,6 +19,20 @@
     <name>Apiaddicts</name>
     <url>https://apiaddicts.org</url>
   </organization>
+  <developers>
+    <developer>
+      <id>AP</id>
+      <name>Adrian Palanques</name>
+      <email>adrian.palanques@cloudappi.net</email>
+      <organization>Cloudappi</organization>
+    </developer>
+    <developer>
+      <id>MH</id>
+      <name>Melsy Huamani</name>
+      <email>melsy.huamani.pe@cloudappi.net</email>
+      <organization>Cloudappi</organization>
+    </developer>
+  </developers>
   <licenses>
     <license>
       <name>GNU LGPL 3</name>
