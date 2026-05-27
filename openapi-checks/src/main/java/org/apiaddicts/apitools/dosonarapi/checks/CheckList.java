@@ -25,8 +25,10 @@ import java.util.List;
 public final class CheckList {
   public static final String YAML_REPOSITORY_KEY = "openapi-yaml";
   public static final String JSON_REPOSITORY_KEY = "openapi-json";
+  public static final String OPENAPI_REPOSITORY_KEY = "openapi";
   public static final String YAML_LANGUAGE = "yaml";
   public static final String JSON_LANGUAGE = "json";
+  public static final String OPENAPI_LANGUAGE = "openapi";
 
   private CheckList() {
   }

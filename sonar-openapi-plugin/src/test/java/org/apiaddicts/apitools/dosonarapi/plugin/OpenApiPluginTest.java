@@ -36,6 +36,11 @@ public class OpenApiPluginTest {
     new OpenApiPlugin().define(context);
 
     assertThat(context.getExtensions())
-      .contains(OpenApiScannerSensor.class, OpenApiRulesDefinition.class, OpenApiMetrics.class);
+      .contains(
+        OpenApi.class,
+        OpenApiProfileDefinition.class,
+        OpenApiScannerSensor.class,
+        OpenApiRulesDefinition.class,
+        OpenApiMetrics.class);
   }
 }

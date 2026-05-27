@@ -144,4 +144,53 @@ public class OpenApiChecksTest {
     OpenApiChecks checks = OpenApiChecks.createOpenApiCheck(factory);
     assertThat(checks.ruleKeyFor(new org.apiaddicts.apitools.dosonarapi.checks.PathMaskeradingCheck())).isNull();
   }
+
+  @Test
+  public void addCustomOpenApiChecks_adds_repo_without_suffix() {
+    CheckFactory factory = factoryWithRule("my-custom", "PathMaskerading");
+    OpenApiChecks checks = OpenApiChecks.createOpenApiCheck(factory)
+      .addCustomOpenApiChecks(new OpenApiCustomRuleRepository[]{repoWithKey("my-custom")});
+    assertThat(checks.all()).isNotEmpty();
+  }
+
+  @Test
+  public void addCustomOpenApiChecks_skips_yaml_repo() {
+    CheckFactory factory = factoryWithRule("my-custom-yaml", "PathMaskerading");
+    OpenApiChecks checks = OpenApiChecks.createOpenApiCheck(factory)
+      .addCustomOpenApiChecks(new OpenApiCustomRuleRepository[]{repoWithKey("my-custom-yaml")});
+    assertThat(checks.all()).isEmpty();
+  }
+
+  @Test
+  public void addCustomOpenApiChecks_skips_json_repo() {
+    CheckFactory factory = factoryWithRule("my-custom-json", "PathMaskerading");
+    OpenApiChecks checks = OpenApiChecks.createOpenApiCheck(factory)
+      .addCustomOpenApiChecks(new OpenApiCustomRuleRepository[]{repoWithKey("my-custom-json")});
+    assertThat(checks.all()).isEmpty();
+  }
+
+  @Test
+  public void addCustomOpenApiChecks_skips_base_openapi_repo() {
+    CheckFactory factory = factoryWithRule(CheckList.OPENAPI_REPOSITORY_KEY, "PathMaskerading");
+    OpenApiChecks checks = OpenApiChecks.createOpenApiCheck(factory)
+      .addCustomOpenApiChecks(new OpenApiCustomRuleRepository[]{repoWithKey(CheckList.OPENAPI_REPOSITORY_KEY)});
+    assertThat(checks.all()).isEmpty();
+  }
+
+  @Test
+  public void addCustomOpenApiChecks_handles_null() {
+    ActiveRules rules = new ActiveRulesBuilder().build();
+    CheckFactory factory = new CheckFactory(rules);
+    OpenApiChecks checks = OpenApiChecks.createOpenApiCheck(factory)
+      .addCustomOpenApiChecks(null);
+    assertThat(checks.all()).isEmpty();
+  }
+
+  @Test
+  public void addCustomYamlChecks_requires_yaml_suffix() {
+    CheckFactory factory = factoryWithRule("my-custom", "PathMaskerading");
+    OpenApiChecks checks = OpenApiChecks.createOpenApiCheck(factory)
+      .addCustomYamlChecks(new OpenApiCustomRuleRepository[]{repoWithKey("my-custom")});
+    assertThat(checks.all()).isEmpty();
+  }
 }
