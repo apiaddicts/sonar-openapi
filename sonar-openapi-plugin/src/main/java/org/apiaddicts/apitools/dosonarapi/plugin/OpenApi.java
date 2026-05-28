@@ -19,10 +19,19 @@
  */
 package org.apiaddicts.apitools.dosonarapi.plugin;
 
-public final class OpenApi {
+import org.sonar.api.resources.AbstractLanguage;
+
+public class OpenApi extends AbstractLanguage {
 
   public static final String KEY = "openapi";
+  private static final String NAME = "OpenAPI";
 
-  private OpenApi() {}
+  public OpenApi() {
+    super(KEY, NAME);
+  }
 
+  @Override
+  public String[] getFileSuffixes() {
+    return new String[0];
+  }
 }

@@ -19,19 +19,22 @@
  */
 package org.apiaddicts.apitools.dosonarapi.plugin;
 
-import org.sonar.api.Plugin;
-import org.apiaddicts.apitools.dosonarapi.openapi.metrics.OpenApiMetrics;
+import org.sonar.api.server.profile.BuiltInQualityProfilesDefinition;
+import org.sonar.api.utils.AnnotationUtils;
+import org.sonar.check.Rule;
+import org.apiaddicts.apitools.dosonarapi.checks.CheckList;
 
-public class OpenApiPlugin implements Plugin {
+public class OpenApiProfileDefinition implements BuiltInQualityProfilesDefinition {
+
+  public static final String SONAR_WAY_PROFILE = "Sonar way";
 
   @Override
   public void define(Context context) {
-    context.addExtensions(
-      OpenApi.class,
-      OpenApiProfileDefinition.class,
-      OpenApiScannerSensor.class,
-      OpenApiRulesDefinition.class,
-      OpenApiMetrics.class);
+    NewBuiltInQualityProfile profile = context.createBuiltInQualityProfile(SONAR_WAY_PROFILE, CheckList.OPENAPI_LANGUAGE);
+    for (Class<?> check : CheckList.getChecks()) {
+      Rule annotation = AnnotationUtils.getAnnotation(check, Rule.class);
+      profile.activateRule(CheckList.OPENAPI_REPOSITORY_KEY, annotation.key());
+    }
+    profile.done();
   }
-
 }

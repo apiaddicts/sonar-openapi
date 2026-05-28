@@ -77,7 +77,7 @@ public class OpenApiScannerSensorTest {
     sensor().describe(descriptor);
 
     assertThat(descriptor.name()).isEqualTo("OpenAPI Scanner Sensor");
-    assertThat(descriptor.languages()).containsOnly("yaml", "json");
+    assertThat(descriptor.languages()).containsOnly("yaml", "json", "openapi");
     assertThat(descriptor.type()).isEqualTo(InputFile.Type.MAIN);
   }
 
@@ -142,6 +142,22 @@ public class OpenApiScannerSensorTest {
     sensor().execute(context);
 
     assertThat(context.allIssues()).isEmpty();
+  }
+
+  @Test
+  public void test_openapi_language_scan() {
+    activeRules = (new ActiveRulesBuilder())
+      .create(RuleKey.of(CheckList.OPENAPI_REPOSITORY_KEY, "PathMaskerading"))
+      .activate()
+      .build();
+
+    inputFile("file1.yaml", CheckList.OPENAPI_LANGUAGE);
+    sensor().execute(context);
+
+    assertThat(context.allIssues()).hasSize(1);
+    Issue issue = Iterables.get(context.allIssues(), 0);
+    assertThat(issue.ruleKey().repository()).isEqualTo(CheckList.OPENAPI_REPOSITORY_KEY);
+    assertThat(context.allAnalysisErrors()).isEmpty();
   }
 
   @Test
@@ -253,6 +269,10 @@ public class OpenApiScannerSensorTest {
 
   private InputFile inputFile(String name) {
     String language = name.endsWith(".json") ? CheckList.JSON_LANGUAGE : CheckList.YAML_LANGUAGE;
+    return inputFile(name, language);
+  }
+
+  private InputFile inputFile(String name, String language) {
     DefaultInputFile inputFile = TestInputFileBuilder.create("moduleKey", name)
       .setModuleBaseDir(baseDir)
       .setCharset(StandardCharsets.UTF_8)

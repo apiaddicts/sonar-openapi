@@ -40,6 +40,7 @@ public class OpenApiScannerSensor implements Sensor {
   private static final Logger LOGGER = Loggers.get(OpenApiScannerSensor.class);
   private final OpenApiChecks yamlChecks;
   private final OpenApiChecks jsonChecks;
+  private final OpenApiChecks openapiChecks;
   private FileLinesContextFactory fileLinesContextFactory;
   private final NoSonarFilter noSonarFilter;
 
@@ -54,6 +55,9 @@ public class OpenApiScannerSensor implements Sensor {
     this.jsonChecks = OpenApiChecks.createOpenApiCheck(checkFactory)
       .addChecks(CheckList.JSON_REPOSITORY_KEY, CheckList.getChecks())
       .addCustomJsonChecks(customRuleRepositories);
+    this.openapiChecks = OpenApiChecks.createOpenApiCheck(checkFactory)
+      .addChecks(CheckList.OPENAPI_REPOSITORY_KEY, CheckList.getChecks())
+      .addCustomOpenApiChecks(customRuleRepositories);
     this.fileLinesContextFactory = fileLinesContextFactory;
     this.noSonarFilter = noSonarFilter;
   }
@@ -62,7 +66,7 @@ public class OpenApiScannerSensor implements Sensor {
   public void describe(SensorDescriptor descriptor) {
     descriptor.name("OpenAPI Scanner Sensor")
       .onlyOnFileType(InputFile.Type.MAIN)
-      .onlyOnLanguages(CheckList.YAML_LANGUAGE, CheckList.JSON_LANGUAGE);
+      .onlyOnLanguages(CheckList.YAML_LANGUAGE, CheckList.JSON_LANGUAGE, CheckList.OPENAPI_LANGUAGE);
   }
 
   @Override
@@ -82,6 +86,11 @@ public class OpenApiScannerSensor implements Sensor {
       p.and(p.hasType(InputFile.Type.MAIN), p.hasLanguage(CheckList.JSON_LANGUAGE))
     ).forEach(jsonFiles::add);
 
+    List<InputFile> openapiFiles = new ArrayList<>();
+    context.fileSystem().inputFiles(
+      p.and(p.hasType(InputFile.Type.MAIN), p.hasLanguage(CheckList.OPENAPI_LANGUAGE))
+    ).forEach(openapiFiles::add);
+
     if (!yamlFiles.isEmpty()) {
       LOGGER.info("OpenAPI Scanner called for yaml files: {}.", yamlFiles);
       new OpenApiAnalyzer(context, yamlChecks, fileLinesContextFactory, noSonarFilter, Collections.unmodifiableList(yamlFiles)).scanFiles();
@@ -89,6 +98,10 @@ public class OpenApiScannerSensor implements Sensor {
     if (!jsonFiles.isEmpty()) {
       LOGGER.info("OpenAPI Scanner called for json files: {}.", jsonFiles);
       new OpenApiAnalyzer(context, jsonChecks, fileLinesContextFactory, noSonarFilter, Collections.unmodifiableList(jsonFiles)).scanFiles();
+    }
+    if (!openapiFiles.isEmpty()) {
+      LOGGER.info("OpenAPI Scanner called for openapi files: {}.", openapiFiles);
+      new OpenApiAnalyzer(context, openapiChecks, fileLinesContextFactory, noSonarFilter, Collections.unmodifiableList(openapiFiles)).scanFiles();
     }
   }
 }

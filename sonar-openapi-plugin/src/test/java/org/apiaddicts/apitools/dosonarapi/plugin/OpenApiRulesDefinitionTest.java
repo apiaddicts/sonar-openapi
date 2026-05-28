@@ -28,7 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class OpenApiRulesDefinitionTest {
 
   @Test
-  public void defines_yaml_and_json_repositories() {
+  public void defines_yaml_json_and_openapi_repositories() {
     OpenApiRulesDefinition definition = new OpenApiRulesDefinition();
     RulesDefinition.Context context = new RulesDefinition.Context();
 
@@ -43,6 +43,11 @@ public class OpenApiRulesDefinitionTest {
     assertThat(jsonRepo).isNotNull();
     assertThat(jsonRepo.language()).isEqualTo(CheckList.JSON_LANGUAGE);
     assertThat(jsonRepo.rules()).hasSizeGreaterThanOrEqualTo(1);
+
+    RulesDefinition.Repository openapiRepo = context.repository(CheckList.OPENAPI_REPOSITORY_KEY);
+    assertThat(openapiRepo).isNotNull();
+    assertThat(openapiRepo.language()).isEqualTo(CheckList.OPENAPI_LANGUAGE);
+    assertThat(openapiRepo.rules()).hasSizeGreaterThanOrEqualTo(1);
   }
 
   @Test
@@ -58,13 +63,15 @@ public class OpenApiRulesDefinitionTest {
   }
 
   @Test
-  public void yaml_and_json_repos_have_same_rules() {
+  public void all_repos_have_same_rules() {
     OpenApiRulesDefinition definition = new OpenApiRulesDefinition();
     RulesDefinition.Context context = new RulesDefinition.Context();
     definition.define(context);
 
     RulesDefinition.Repository yamlRepo = context.repository(CheckList.YAML_REPOSITORY_KEY);
     RulesDefinition.Repository jsonRepo = context.repository(CheckList.JSON_REPOSITORY_KEY);
+    RulesDefinition.Repository openapiRepo = context.repository(CheckList.OPENAPI_REPOSITORY_KEY);
     assertThat(yamlRepo.rules()).hasSameSizeAs(jsonRepo.rules());
+    assertThat(yamlRepo.rules()).hasSameSizeAs(openapiRepo.rules());
   }
 }

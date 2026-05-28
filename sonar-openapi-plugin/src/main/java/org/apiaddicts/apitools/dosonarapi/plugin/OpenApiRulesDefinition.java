@@ -41,6 +41,7 @@ public class OpenApiRulesDefinition implements RulesDefinition, OpenApiCustomRul
   public void define(Context context) {
     createRepository(context, repositoryKey(), CheckList.YAML_LANGUAGE);
     createRepository(context, CheckList.JSON_REPOSITORY_KEY, CheckList.JSON_LANGUAGE);
+    createRepository(context, CheckList.OPENAPI_REPOSITORY_KEY, CheckList.OPENAPI_LANGUAGE);
   }
 
   private void createRepository(Context context, String key, String language) {
