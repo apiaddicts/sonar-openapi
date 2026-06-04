@@ -29,6 +29,8 @@ import org.apiaddicts.apitools.dosonarapi.api.OpenApiCheck;
 import org.apiaddicts.apitools.dosonarapi.api.PreciseIssue;
 import org.apiaddicts.apitools.dosonarapi.api.v2.OpenApi2Grammar;
 import org.apiaddicts.apitools.dosonarapi.api.v3.OpenApi3Grammar;
+import org.apiaddicts.apitools.dosonarapi.api.v31.OpenApi31Grammar;
+import org.apiaddicts.apitools.dosonarapi.api.v32.OpenApi32Grammar;
 import org.apiaddicts.apitools.dosonarapi.sslr.yaml.grammar.JsonNode;
 import org.apiaddicts.apitools.dosonarapi.sslr.yaml.grammar.impl.MissingNode;
 
@@ -39,7 +41,7 @@ public class DocumentedTagCheck extends OpenApiCheck {
 
   @Override
   public Set<AstNodeType> subscribedKinds() {
-    return Sets.newHashSet(OpenApi2Grammar.TAG, OpenApi2Grammar.OPERATION, OpenApi3Grammar.TAG, OpenApi3Grammar.OPERATION);
+    return Sets.newHashSet(OpenApi2Grammar.TAG, OpenApi2Grammar.OPERATION, OpenApi3Grammar.TAG, OpenApi3Grammar.OPERATION, OpenApi31Grammar.TAG, OpenApi31Grammar.OPERATION, OpenApi32Grammar.TAG, OpenApi32Grammar.OPERATION);
   }
 
   @Override
@@ -61,7 +63,7 @@ public class DocumentedTagCheck extends OpenApiCheck {
   @Override
   protected void visitNode(JsonNode node) {
     AstNodeType nodeType = node.getType();
-    if (nodeType == OpenApi2Grammar.TAG || nodeType == OpenApi3Grammar.TAG) {
+    if (nodeType == OpenApi2Grammar.TAG || nodeType == OpenApi3Grammar.TAG || nodeType == OpenApi31Grammar.TAG || nodeType == OpenApi32Grammar.TAG) {
       visitTag(node);
     } else {
       visitOperation(node);

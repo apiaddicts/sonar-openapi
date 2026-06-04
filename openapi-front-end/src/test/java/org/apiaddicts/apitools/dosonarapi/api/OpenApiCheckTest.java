@@ -22,13 +22,19 @@ package org.apiaddicts.apitools.dosonarapi.api;
 import com.google.common.collect.Sets;
 import com.sonar.sslr.api.AstNodeType;
 import java.io.File;
+import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.junit.Test;
 import org.sonar.check.Rule;
 import org.apiaddicts.apitools.dosonarapi.api.v3.OpenApi3Grammar;
+import org.apiaddicts.apitools.dosonarapi.openapi.OpenApiConfiguration;
+import org.apiaddicts.apitools.dosonarapi.openapi.parser.OpenApiParser;
 import org.apiaddicts.apitools.dosonarapi.sslr.yaml.grammar.JsonNode;
+import org.apiaddicts.apitools.dosonarapi.sslr.yaml.grammar.YamlParser;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -75,5 +81,41 @@ public class OpenApiCheckTest {
     assertThat(rule1.visitedNodes).containsOnly("/paths/~1pets/get");
     assertThat(rule2.visitedNodes).isEmpty();
     assertThat(rule3.visitedNodes).containsOnly("/paths/~1pets/get", "/paths/~1pets/get/parameters/0");
+  }
+
+  private static class LineIssueCheck extends OpenApiCheck {
+    @Override
+    public Set<AstNodeType> subscribedKinds() {
+      return Collections.emptySet();
+    }
+
+    @Override
+    protected void visitFile(JsonNode root) {
+      addLineIssue("line problem", 3);
+    }
+  }
+
+  private static class NoAnnotationCheck extends OpenApiCheck {}
+
+  @Test
+  public void add_line_issue_creates_issue_on_given_line() {
+    OpenApiConfiguration config = new OpenApiConfiguration(StandardCharsets.UTF_8, false);
+    YamlParser parser = OpenApiParser.createV3(config);
+    JsonNode root = parser.parse("openapi: \"3.0.0\"\ninfo:\n  title: T\n  version: 1.0\npaths: {}");
+    OpenApiFile file = new OpenApiFile() {
+      @Override public String content() { return ""; }
+      @Override public String fileName() { return "test.yaml"; }
+    };
+    OpenApiVisitorContext ctx = new OpenApiVisitorContext(root, parser.getIssues(), file);
+
+    LineIssueCheck check = new LineIssueCheck();
+    List<PreciseIssue> issues = check.scanFileForIssues(ctx);
+    assertThat(issues).hasSize(1);
+    assertThat(issues.get(0).primaryLocation().startLine()).isEqualTo(3);
+  }
+
+  @Test
+  public void no_rule_annotation_returns_empty_rule_id() {
+    assertThat(new NoAnnotationCheck().getRuleId()).isEmpty();
   }
 }

@@ -175,5 +175,44 @@ public class IssueLocationTest {
     assertThat(issueLocation1.equals(issueLocation2)).isFalse();
   }
 
+  @Test
+  public void both_null_messages_are_equal() {
+    IssueLocation loc1 = IssueLocation.atLineLevel(null, 10);
+    IssueLocation loc2 = IssueLocation.atLineLevel(null, 10);
+    assertThat(loc1.equals(loc2)).isTrue();
+    assertThat(loc1).hasSameHashCodeAs(loc2);
+  }
+
+  @Test
+  public void null_message_not_equal_to_non_null_message() {
+    IssueLocation loc1 = IssueLocation.atLineLevel(null, 10);
+    IssueLocation loc2 = IssueLocation.atLineLevel(MESSAGE, 10);
+    assertThat(loc1.equals(loc2)).isFalse();
+    assertThat(loc2.equals(loc1)).isFalse();
+  }
+
+  @Test
+  public void hashcode_with_null_message() {
+    IssueLocation loc = IssueLocation.atLineLevel(null, 5);
+    int hash = loc.hashCode();
+    assertThat(hash).isEqualTo(IssueLocation.atLineLevel(null, 5).hashCode());
+  }
+
+  @Test
+  public void precise_location_with_multiline_value() {
+    JsonNode root = parser.parse("swagger: \"2.0\"\n" +
+      "info:\n" +
+      "  version: 1.0.0\n" +
+      "  title: T\n" +
+      "  description: |\n" +
+      "    line one\n" +
+      "    line two\n" +
+      "paths:\n" +
+      "  /pets: {}");
+    JsonNode descNode = root.at("/info/description").value();
+    IssueLocation loc = IssueLocation.preciseLocation(MESSAGE, descNode);
+    assertThat(loc.startLine()).isGreaterThan(0);
+    assertThat(loc.endLine()).isGreaterThanOrEqualTo(loc.startLine());
+  }
 
 }

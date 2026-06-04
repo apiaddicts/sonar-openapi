@@ -20,11 +20,16 @@
 package org.apiaddicts.apitools.dosonarapi.checks;
 
 import com.sonar.sslr.api.RecognitionException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import org.junit.Test;
 import org.apiaddicts.apitools.dosonarapi.api.OpenApiFile;
 import org.apiaddicts.apitools.dosonarapi.api.OpenApiVisitorContext;
 import org.apiaddicts.apitools.dosonarapi.api.PreciseIssue;
+import org.apiaddicts.apitools.dosonarapi.openapi.OpenApiConfiguration;
+import org.apiaddicts.apitools.dosonarapi.openapi.parser.OpenApiParser;
+import org.apiaddicts.apitools.dosonarapi.sslr.yaml.grammar.ValidationException;
+import org.apiaddicts.apitools.dosonarapi.sslr.yaml.grammar.YamlParser;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
@@ -41,6 +46,33 @@ public class ParsingErrorCheckTest {
     assertThat(issues)
         .extracting(i -> i.primaryLocation().startLine(), i -> i.primaryLocation().message())
         .contains(tuple(3, "Parsing exception message"));
+  }
+
+  @Test
+  public void reports_validation_exception_causes_as_issues() {
+    String invalidYaml =
+      "openapi: \"3.0.0\"\n" +
+      "info:\n" +
+      "  title: Test API\n" +
+      "paths:\n" +
+      "  /pets:\n" +
+      "    post:\n" +
+      "      description: missing responses\n";
+
+    OpenApiConfiguration config = new OpenApiConfiguration(StandardCharsets.UTF_8, true);
+    YamlParser parser = OpenApiParser.createV3(config);
+    OpenApiVisitorContext context;
+    try {
+      parser.parse(invalidYaml);
+      context = new OpenApiVisitorContext(new TestFile(), (RecognitionException) null);
+    } catch (ValidationException e) {
+      context = new OpenApiVisitorContext(new TestFile(), e);
+    }
+
+    ParsingErrorCheck check = new ParsingErrorCheck();
+    List<PreciseIssue> issues = check.scanFileForIssues(context);
+
+    assertThat(issues).isNotEmpty();
   }
 
   private static class TestFile implements OpenApiFile {

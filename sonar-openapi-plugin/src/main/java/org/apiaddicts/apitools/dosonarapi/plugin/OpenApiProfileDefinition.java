@@ -25,15 +25,15 @@ import org.sonar.check.Rule;
 import org.apiaddicts.apitools.dosonarapi.checks.CheckList;
 
 public class OpenApiProfileDefinition implements BuiltInQualityProfilesDefinition {
+
   public static final String SONAR_WAY_PROFILE = "Sonar way";
 
   @Override
-  public void define(BuiltInQualityProfilesDefinition.Context context) {
-    NewBuiltInQualityProfile profile = context.createBuiltInQualityProfile(SONAR_WAY_PROFILE, OpenApi.KEY);
-    profile.setDefault(true);
+  public void define(Context context) {
+    NewBuiltInQualityProfile profile = context.createBuiltInQualityProfile(SONAR_WAY_PROFILE, CheckList.OPENAPI_LANGUAGE);
     for (Class<?> check : CheckList.getChecks()) {
       Rule annotation = AnnotationUtils.getAnnotation(check, Rule.class);
-      profile.activateRule(CheckList.REPOSITORY_KEY, annotation.key());
+      profile.activateRule(CheckList.OPENAPI_REPOSITORY_KEY, annotation.key());
     }
     profile.done();
   }

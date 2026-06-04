@@ -19,40 +19,19 @@
  */
 package org.apiaddicts.apitools.dosonarapi.plugin;
 
-import java.util.ArrayList;
-import java.util.List;
-import org.apache.commons.lang.StringUtils;
-import org.sonar.api.config.Configuration;
 import org.sonar.api.resources.AbstractLanguage;
 
-@java.lang.SuppressWarnings("squid:S2160") // purposely not redefining equals() to ignore Configuration differences
 public class OpenApi extends AbstractLanguage {
 
   public static final String KEY = "openapi";
+  private static final String NAME = "OpenAPI";
 
-  private static final String[] DEFAULT_FILE_SUFFIXES = {"yaml"};
-
-  private Configuration settings;
-
-  public OpenApi(Configuration settings) {
-    super(KEY, "OpenAPI");
-    this.settings = settings;
-  }
-
-  private static String[] filterEmptyStrings(String[] stringArray) {
-    List<String> nonEmptyStrings = new ArrayList<>();
-    for (String string : stringArray) {
-      if (StringUtils.isNotBlank(string.trim())) {
-        nonEmptyStrings.add(string.trim());
-      }
-    }
-    return nonEmptyStrings.toArray(new String[0]);
+  public OpenApi() {
+    super(KEY, NAME);
   }
 
   @Override
   public String[] getFileSuffixes() {
-    String[] suffixes = filterEmptyStrings(settings.getStringArray(OpenApiPlugin.FILE_SUFFIXES_KEY));
-    return suffixes.length == 0 ? OpenApi.DEFAULT_FILE_SUFFIXES : suffixes;
+    return new String[0];
   }
-
 }

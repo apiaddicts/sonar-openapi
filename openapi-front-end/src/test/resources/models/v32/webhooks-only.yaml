@@ -1,0 +1,20 @@
+openapi: "3.2.0"
+info:
+  title: Webhooks-only API
+  summary: An API that only exposes webhooks
+  version: "1.0.0"
+jsonSchemaDialect: "https://json-schema.org/draft/2020-12/schema"
+webhooks:
+  newBooking:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+      responses:
+        '200':
+          description: Webhook received
