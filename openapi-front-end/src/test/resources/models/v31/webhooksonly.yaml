@@ -1,0 +1,18 @@
+openapi: "3.1.1"
+info:
+  title: Webhooks only
+  version: 1.0.0
+jsonSchemaDialect: "https://spec.openapis.org/oas/3.1/dialect/base"
+webhooks:
+  newPet:
+    post:
+      responses:
+        '200':
+          description: ok
+components:
+  pathItems:
+    petItem:
+      get:
+        responses:
+          '200':
+            description: ok

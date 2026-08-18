@@ -78,6 +78,7 @@ public enum OpenApi31Grammar implements GrammarRuleKey {
   SECURITY_SCHEMES,
   LINKS_COMPONENT,
   CALLBACKS_COMPONENT,
+  PATH_ITEMS_COMPONENT,
   SCHEMA_PROPERTIES,
   DESCRIPTION;
 
@@ -88,10 +89,11 @@ public enum OpenApi31Grammar implements GrammarRuleKey {
     b.setRootRule(ROOT);
 
     b.rule(ROOT).is(b.object(
-      b.mandatoryProperty("openapi", "3.1.0"),
+      b.mandatoryProperty("openapi", b.firstOf("3.1.0", "3.1.1", "3.1.2")),
       b.mandatoryProperty("info", INFO),
+      b.property("jsonSchemaDialect", b.string()),
       b.property("servers", b.array(SERVER)),
-      b.mandatoryProperty("paths", PATHS),
+      b.property("paths", PATHS),
       b.property("webhooks", WEBHOOKS),
       b.property("components", COMPONENTS),
       b.property("security", b.array(SECURITY_REQUIREMENT)),
@@ -151,12 +153,14 @@ public enum OpenApi31Grammar implements GrammarRuleKey {
       b.property("securitySchemes", SECURITY_SCHEMES),
       b.property("links", LINKS_COMPONENT),
       b.property("callbacks", CALLBACKS_COMPONENT),
+      b.property("pathItems", PATH_ITEMS_COMPONENT),
       b.patternProperty(EXTENSION_PATTERN, b.anything())));
     OpenApiGrammar.buildBaseComponentRules(b,
       SCHEMAS_COMPONENT, RESPONSES_COMPONENT, PARAMETERS_COMPONENT, EXAMPLES_COMPONENT,
       BODIES_COMPONENT, HEADERS_COMPONENT, SECURITY_SCHEMES, LINKS_COMPONENT, CALLBACKS_COMPONENT,
       REF, SCHEMA, RESPONSE, PARAMETER, EXAMPLE, REQUEST_BODY, HEADER, SECURITY_SCHEME, LINK, CALLBACK);
     b.rule(WEBHOOKS_COMPONENT).is(b.object(b.patternProperty(".*", b.firstOf(REF, WEBHOOK))));
+    b.rule(PATH_ITEMS_COMPONENT).is(b.object(b.patternProperty(".*", b.firstOf(REF, PATH))));
 
     buildParameters(b);
     buildResponses(b);
@@ -185,16 +189,35 @@ public enum OpenApi31Grammar implements GrammarRuleKey {
       b.property("type", b.firstOf(b.string(), b.array(b.string()))),
       b.property("contentMediaType", b.string()),
       b.property("contentEncoding", b.string()),
+      b.property("contentSchema", b.firstOf(REF, SCHEMA)),
       b.property("allOf", b.array(b.firstOf(REF, SCHEMA))),
       b.property("oneOf", b.array(b.firstOf(REF, SCHEMA))),
       b.property("anyOf", b.array(b.firstOf(REF, SCHEMA))),
       b.property("not", b.firstOf(REF, SCHEMA)),
+      b.property("if", b.firstOf(REF, SCHEMA)),
+      b.property("then", b.firstOf(REF, SCHEMA)),
+      b.property("else", b.firstOf(REF, SCHEMA)),
+      b.property("prefixItems", b.array(b.firstOf(REF, SCHEMA))),
       b.property("items", b.firstOf(REF, SCHEMA)),
+      b.property("contains", b.firstOf(REF, SCHEMA)),
+      b.property("minContains", b.integer()),
+      b.property("maxContains", b.integer()),
+      b.property("unevaluatedItems", b.firstOf(b.bool(), REF, SCHEMA)),
       b.property("properties", SCHEMA_PROPERTIES),
+      b.property("patternProperties", SCHEMA_PROPERTIES),
+      b.property("propertyNames", b.firstOf(REF, SCHEMA)),
+      b.property("dependentSchemas", b.object(b.patternProperty(".*", b.firstOf(REF, SCHEMA)))),
+      b.property("dependentRequired", b.object(b.patternProperty(".*", b.array(b.string())))),
       b.property("$schema", b.string()),
+      b.property("$id", b.string()),
+      b.property("$anchor", b.string()),
+      b.property("$defs", b.object(b.patternProperty(".*", b.firstOf(REF, SCHEMA)))),
+      b.property("$dynamicRef", b.string()),
+      b.property("$dynamicAnchor", b.string()),
+      b.property("$comment", b.string()),
       b.property("additionalProperties", b.firstOf(b.bool(), REF, SCHEMA)),
       b.property("description", DESCRIPTION),
-      b.property("unevaluatedProperties", b.bool()),
+      b.property("unevaluatedProperties", b.firstOf(b.bool(), REF, SCHEMA)),
       b.property("format", b.string()),
       b.property("default", b.anything()),
       b.property("nullable", b.bool()),

@@ -112,7 +112,13 @@ public class OpenApiAnalyzer {
   private static boolean isV3Version(JsonNode openapiNode) {
     if (openapiNode.isMissing()) return false;
     String v = openapiNode.getTokenValue();
-    return "3.0.0".equals(v) || "3.0.1".equals(v) || "3.0.2".equals(v) || "3.0.3".equals(v);
+    return "3.0.0".equals(v) || "3.0.1".equals(v) || "3.0.2".equals(v) || "3.0.3".equals(v) || "3.0.4".equals(v);
+  }
+
+  private static boolean isV31Version(JsonNode openapiNode) {
+    if (openapiNode.isMissing()) return false;
+    String v = openapiNode.getTokenValue();
+    return "3.1.0".equals(v) || "3.1.1".equals(v) || "3.1.2".equals(v);
   }
 
   private YamlParser selectParser(boolean isV2, boolean isV3, boolean isV31, boolean isV32) {
@@ -133,7 +139,7 @@ public class OpenApiAnalyzer {
       boolean isV2 = !rootNode.at("/swagger").isMissing();
       JsonNode openapiNode = rootNode.at("/openapi");
       boolean isV3 = isV3Version(openapiNode);
-      boolean isV31 = !openapiNode.isMissing() && openapiNode.getTokenValue().equals("3.1.0");
+      boolean isV31 = isV31Version(openapiNode);
       boolean isV32 = !openapiNode.isMissing() && openapiNode.getTokenValue().equals("3.2.0");
       YamlParser targetParser = selectParser(isV2, isV3, isV31, isV32);
       if (targetParser == null) return;

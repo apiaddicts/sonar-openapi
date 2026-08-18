@@ -30,6 +30,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class OpenApiParserTest {
 
   private static final OpenApiConfiguration CONFIG = new OpenApiConfiguration(StandardCharsets.UTF_8, false);
+  private static final OpenApiConfiguration STRICT = new OpenApiConfiguration(StandardCharsets.UTF_8, true);
 
   private static final String MINIMAL_V2 =
     "swagger: \"2.0\"\n" +
@@ -44,6 +45,14 @@ public class OpenApiParserTest {
     "  title: Test\n" +
     "  version: 1.0.0\n" +
     "paths: {}";
+
+  private static String minimalOpenApi(String version) {
+    return "openapi: \"" + version + "\"\n" +
+      "info:\n" +
+      "  title: Test\n" +
+      "  version: 1.0.0\n" +
+      "paths: {}";
+  }
 
   @Test
   public void create_v2_parser_parses_swagger_doc() {
@@ -61,6 +70,30 @@ public class OpenApiParserTest {
     JsonNode root = parser.parse(MINIMAL_V3);
     assertThat(root).isNotNull();
     assertThat(root.at("/openapi").getTokenValue()).isEqualTo("3.0.0");
+  }
+
+  @Test
+  public void create_v3_parser_accepts_openapi_304() {
+    YamlParser parser = OpenApiParser.createV3(STRICT);
+    JsonNode root = parser.parse(minimalOpenApi("3.0.4"));
+    assertThat(root).isNotNull();
+    assertThat(root.at("/openapi").getTokenValue()).isEqualTo("3.0.4");
+  }
+
+  @Test
+  public void create_v31_parser_accepts_openapi_311() {
+    YamlParser parser = OpenApiParser.createV31(STRICT);
+    JsonNode root = parser.parse(minimalOpenApi("3.1.1"));
+    assertThat(root).isNotNull();
+    assertThat(root.at("/openapi").getTokenValue()).isEqualTo("3.1.1");
+  }
+
+  @Test
+  public void create_v31_parser_accepts_openapi_312() {
+    YamlParser parser = OpenApiParser.createV31(STRICT);
+    JsonNode root = parser.parse(minimalOpenApi("3.1.2"));
+    assertThat(root).isNotNull();
+    assertThat(root.at("/openapi").getTokenValue()).isEqualTo("3.1.2");
   }
 
   @Test
