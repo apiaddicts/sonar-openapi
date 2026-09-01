@@ -83,7 +83,7 @@ public enum OpenApi3Grammar implements GrammarRuleKey {
     b.setRootRule(ROOT);
 
     b.rule(ROOT).is(b.object(
-      b.mandatoryProperty("openapi", b.firstOf("3.0.0", "3.0.1", "3.0.2", "3.0.3", "3.0.4")),
+      b.mandatoryProperty("openapi", b.scalar()),
       b.mandatoryProperty("info", INFO),
       b.property("servers", b.array(SERVER)),
       b.mandatoryProperty("paths", PATHS),

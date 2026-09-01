@@ -251,6 +251,32 @@ public class OpenApiScannerSensorTest {
   }
 
   @Test
+  public void unsupported_openapi_version_still_runs_rules() {
+    activeRules = (new ActiveRulesBuilder())
+      .create(RuleKey.of(CheckList.YAML_REPOSITORY_KEY, "PathMaskerading"))
+      .activate()
+      .build();
+
+    inputFile("unsupported-openapi-version.yaml");
+    sensor().execute(context);
+
+    assertThat(context.allIssues()).hasSize(1);
+  }
+
+  @Test
+  public void unsupported_swagger_version_still_runs_rules() {
+    activeRules = (new ActiveRulesBuilder())
+      .create(RuleKey.of(CheckList.YAML_REPOSITORY_KEY, "PathMaskerading"))
+      .activate()
+      .build();
+
+    inputFile("unsupported-swagger-version.yaml");
+    sensor().execute(context);
+
+    assertThat(context.allIssues()).hasSize(1);
+  }
+
+  @Test
   public void cancelled_analysis() {
     InputFile inputFile = inputFile("file1.yaml");
     activeRules = (new ActiveRulesBuilder()).build();

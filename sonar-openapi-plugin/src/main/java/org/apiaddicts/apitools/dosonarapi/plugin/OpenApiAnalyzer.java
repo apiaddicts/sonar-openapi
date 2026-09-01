@@ -109,24 +109,14 @@ public class OpenApiAnalyzer {
     }
   }
 
-  private static boolean isV3Version(JsonNode openapiNode) {
-    if (openapiNode.isMissing()) return false;
-    String v = openapiNode.getTokenValue();
-    return "3.0.0".equals(v) || "3.0.1".equals(v) || "3.0.2".equals(v) || "3.0.3".equals(v) || "3.0.4".equals(v);
-  }
+  private YamlParser selectParser(JsonNode swaggerNode, JsonNode openapiNode) {
+    if (!swaggerNode.isMissing()) return OpenApiParser.createV2(configuration);
 
-  private static boolean isV31Version(JsonNode openapiNode) {
-    if (openapiNode.isMissing()) return false;
-    String v = openapiNode.getTokenValue();
-    return "3.1.0".equals(v) || "3.1.1".equals(v) || "3.1.2".equals(v);
-  }
-
-  private YamlParser selectParser(boolean isV2, boolean isV3, boolean isV31, boolean isV32) {
-    if (isV2) return OpenApiParser.createV2(configuration);
-    if (isV32) return OpenApiParser.createV32(configuration);
-    if (isV31) return OpenApiParser.createV31(configuration);
-    if (isV3) return OpenApiParser.createV3(configuration);
-    return null;
+    String version = openapiNode.isMissing() ? null : openapiNode.getTokenValue();
+    if (version == null) return OpenApiParser.createV3(configuration);
+    if (version.startsWith("3.2")) return OpenApiParser.createV32(configuration);
+    if (version.startsWith("3.1")) return OpenApiParser.createV31(configuration);
+    return OpenApiParser.createV3(configuration);
   }
 
   private void scanFile(InputFile inputFile) {
@@ -136,13 +126,11 @@ public class OpenApiAnalyzer {
       String content = getContent(inputFile);
       if (!content.contains("swagger") && !content.contains("openapi")) return;
       JsonNode rootNode = OpenApiParser.createGeneric(configuration).parse(content);
-      boolean isV2 = !rootNode.at("/swagger").isMissing();
+      JsonNode swaggerNode = rootNode.at("/swagger");
       JsonNode openapiNode = rootNode.at("/openapi");
-      boolean isV3 = isV3Version(openapiNode);
-      boolean isV31 = isV31Version(openapiNode);
-      boolean isV32 = !openapiNode.isMissing() && openapiNode.getTokenValue().equals("3.2.0");
-      YamlParser targetParser = selectParser(isV2, isV3, isV31, isV32);
-      if (targetParser == null) return;
+
+      if (swaggerNode.isMissing() && openapiNode.isMissing()) return;
+      YamlParser targetParser = selectParser(swaggerNode, openapiNode);
 
       visitorContext = new OpenApiVisitorContext(targetParser.parse(content), targetParser.getIssues(), openApiFile);
       saveMeasures(inputFile, visitorContext);

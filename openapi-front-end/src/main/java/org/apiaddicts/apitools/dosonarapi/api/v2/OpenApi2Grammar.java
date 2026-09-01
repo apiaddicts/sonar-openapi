@@ -67,7 +67,7 @@ public enum OpenApi2Grammar implements GrammarRuleKey {
     b.setRootRule(ROOT);
 
     b.rule(ROOT).is(b.object(
-      b.mandatoryProperty("swagger", "2.0"),
+      b.mandatoryProperty("swagger", b.scalar()),
       b.mandatoryProperty("info", INFO),
       b.property("host", b.string()),
       b.property("basePath", b.string()),

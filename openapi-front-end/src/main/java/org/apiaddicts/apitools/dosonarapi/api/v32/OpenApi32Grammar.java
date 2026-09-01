@@ -90,7 +90,7 @@ public enum OpenApi32Grammar implements GrammarRuleKey {
     b.setRootRule(ROOT);
 
     b.rule(ROOT).is(b.object(
-      b.mandatoryProperty("openapi", "3.2.0"),
+      b.mandatoryProperty("openapi", b.scalar()),
       b.mandatoryProperty("info", INFO),
       b.property("$self", b.string()),
       b.property("jsonSchemaDialect", b.string()),
