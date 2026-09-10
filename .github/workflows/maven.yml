@@ -23,10 +23,16 @@ jobs:
         cache: maven
     - name: Build, Test and Coverage
       run: mvn -B verify --file pom.xml
+    - name: Set up JDK 21 for Sonar
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+        cache: maven
     - name: SonarCloud Analysis
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: mvn sonar:sonar -Dsonar.token=$SONAR_TOKEN
+      run: mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.11.0.3922:sonar -Dsonar.token=$SONAR_TOKEN
 
     - name: Update dependency graph
       uses: advanced-security/maven-dependency-submission-action@v4

@@ -23,6 +23,8 @@ import org.apiaddicts.apitools.dosonarapi.openapi.BaseNodeTest;
 import org.junit.Test;
 import org.apiaddicts.apitools.dosonarapi.sslr.yaml.grammar.JsonNode;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 public class JsonSchemaTest extends BaseNodeTest<OpenApi31Grammar> {
 
     @Test
@@ -47,5 +49,24 @@ public class JsonSchemaTest extends BaseNodeTest<OpenApi31Grammar> {
 
     JsonNode param = node.at("/value");
     assertEquals("http://json-schema.org/draft-07/schema#", param, "/$schema");
+    }
+
+    @Test
+    public void json_schema_keywords() {
+    JsonNode node = parseResource(OpenApi31Grammar.SCHEMA, "/models/v31/jsonschemakeywords.yaml");
+
+    assertThat(issues).isEmpty();
+    assertEquals("https://example.com/schemas/person", node, "/$id");
+    assertEquals("base64", node, "/properties/id/contentEncoding");
+    assertEquals("1", node, "/properties/tags/minContains");
+    }
+
+    @Test
+    public void root_without_paths_with_dialect_and_path_items() {
+    JsonNode node = parseResource(OpenApi31Grammar.ROOT, "/models/v31/webhooksonly.yaml");
+
+    assertThat(issues).isEmpty();
+    assertEquals("https://spec.openapis.org/oas/3.1/dialect/base", node, "/jsonSchemaDialect");
+    assertMissing(node.at("/paths"));
     }
 }

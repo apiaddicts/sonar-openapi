@@ -1,0 +1,46 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+$id: "https://example.com/schemas/person"
+$anchor: "person"
+$comment: "Exercises JSON Schema keywords supported by OpenAPI 3.1"
+$defs:
+  name:
+    type: string
+type: [object, "null"]
+properties:
+  id:
+    type: [string, "null"]
+    contentEncoding: base64
+    contentMediaType: application/json
+    contentSchema:
+      type: object
+  tags:
+    type: array
+    prefixItems:
+      - type: string
+      - type: integer
+    items:
+      type: string
+    contains:
+      type: string
+    minContains: 1
+    maxContains: 5
+    unevaluatedItems: false
+patternProperties:
+  "^x-meta-":
+    type: string
+propertyNames:
+  pattern: "^[a-z]+$"
+dependentSchemas:
+  creditCard:
+    required: [billingAddress]
+dependentRequired:
+  creditCard: [billingAddress]
+if:
+  properties:
+    kind:
+      const: admin
+then:
+  required: [permissions]
+else:
+  required: [role]
+unevaluatedProperties: false
